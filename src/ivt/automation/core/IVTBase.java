@@ -10,6 +10,7 @@ public class IVTBase {
 	//Reading Properties file code
 	//Start Tag List
 	//End Tag List
+	//checking change
 	//Extract Tag Name
 	
 	static String propFile = "C:\\workspace\\IVT_Automation_Main_Project\\ivtAuto.properties";
