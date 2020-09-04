@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import ivt.automation.businessrules.Adj;
 import ivt.automation.core.IVTBase;
 import ivt.automation.report.IVTExcelReport;
 import ivt.automation.utils.Files;
@@ -90,6 +91,11 @@ public class IVTCompareFiles extends IVTBase {
 		for(String tag : singleTagsList) {
 			String IBMValue = tagnameAndValueIBM.get(tag);
 			String NCValue = tagnameAndValueNC.get(tag);
+			if (tag.equalsIgnoreCase("ADJ")) {
+				ArrayList<String> d= Adj.ADJBusinessRule(IBMValue, NCValue);
+				IBMValue = d.get(0);
+				NCValue = d.get(1);
+			}
 			if(tag.equals("ACCOUNTNO")) {
 				Account_No =  tagnameAndValueIBM.get(tag);
 			}
@@ -104,6 +110,7 @@ public class IVTCompareFiles extends IVTBase {
 			}
 			else
 			{
+				//System.out.println("Account Number "+Account_No+"::Tag:"+tag+" IBM Value:: "+IBMValue+ " NC Value:: "+NCValue);
 				IVTExcelReport.setCellValues("IBMNCDiffReport", IBMValue_row, ACCOUNT_NUMBER,Account_No);
 				IVTExcelReport.setCellValues("IBMNCDiffReport", IBMValue_row, IBMTAG_NUMBER,tag);
 				IVTExcelReport.setCellValues("IBMNCDiffReport", IBMValue_row++, IBMVALUE_NUMBER,IBMValue);
