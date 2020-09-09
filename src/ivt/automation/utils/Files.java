@@ -14,6 +14,7 @@ public class Files extends IVTBase{
 
 	public static File directoryPath_ivt;	
 	public static List<String> IBMAndNCFiles = new ArrayList<>();
+	public static String ACCOUNTNUMBER = null;
 	//All File Operations , To move different folders
 	//Read IBM and NC Paths (from folders)
 	//Count of Files both IBM and NC
@@ -61,6 +62,7 @@ public class Files extends IVTBase{
 			for(String ibmFile : IBMFilesPath) {
 				ibmAcNo=StringUtils.substringAfter(ibmFile,"_");
 				if(ncAcNo.equals(ibmAcNo)) {
+					ACCOUNTNUMBER = ibmAcNo;
 					ibmFile=ivtFilePath.concat("IBM_"+ibmAcNo);
 					ncFile=ivtFilePath.concat("NC_"+ncAcNo);
 					String finalFiles = ibmFile+"|"+ncFile;
@@ -74,5 +76,7 @@ public class Files extends IVTBase{
 		return IBMAndNCFiles;
 
 	}
+	
+	
 
 }
