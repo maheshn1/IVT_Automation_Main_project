@@ -39,6 +39,7 @@ public class IVTSingleTagCompareFiles extends IVTBase {
 		return tempal;
 	}	
 	
+	//Converts List to Map for single tag values which needs delimiter replacement
 	public static LinkedHashMap<String,String> convertList2Map(List<String> list) throws Exception {
         LinkedHashMap<String,String> tempLHM = new LinkedHashMap<>();
         for(String s : list){
