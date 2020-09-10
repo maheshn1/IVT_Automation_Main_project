@@ -30,7 +30,7 @@ public class IVTBase {
 	public static int flag_row = 1;
 	
 	public static List<String> ibmAndNCFiles = new ArrayList<>();
-	static String propFile = "C:\\Users\\094539\\Desktop\\IVT DOCS\\Code\\IVT_Automation_WorkSapce\\IVT_Automation_Main_project\\ivtAuto.properties";
+	static String propFile = "C:\\\\Users\\\\204747\\\\IVT_WorkSpace\\\\IVT_Automation_Main_project\\\\ivtAuto.properties";
 	static Properties prop = new Properties();
 	static BufferedReader br;
 	

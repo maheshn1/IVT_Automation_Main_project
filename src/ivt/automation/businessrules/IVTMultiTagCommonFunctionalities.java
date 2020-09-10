@@ -19,21 +19,21 @@ public class IVTMultiTagCommonFunctionalities extends IVTBase {
 	public static LinkedHashMap<String,String> extractedTagNameAndValue = new LinkedHashMap<String,String>();
 	public static double values = 0.0;
 
-	public static LinkedHashMap<String, String> getTagName(String fileName, List<String> tags,String delimiter) throws Exception{
-		BufferedReader brNC = new BufferedReader(new FileReader(fileName));
-
-		tagNameAndValue.clear();
-		while (((line = brNC.readLine()) != null)) {
-			int count = tags.size();
+	public static List<String> getTagName(String fileName,List<String> taglist) throws Exception, Exception {
+		List<String> tempAl = new ArrayList<>();
+		BufferedReader br = new BufferedReader(new FileReader(fileName));
+		while (((line = br.readLine()) != null)) {
+			int count = taglist.size();
 			for (int i = 0; i < count; i++) {
-				if (line.startsWith(tags.get(i))) {
-					tagNameAndValue = extractTagNameAndValues(line, delimiter);
+				if (line.startsWith(taglist.get(i))) {
+					tempAl.add(line);
 					break;
 				}
 			}
 		}
-		return tagNameAndValue;
-	}
+		br.close();
+		return tempAl;
+	}	
 
 	public static LinkedHashMap<String,String> extractTagNameAndValues(String str, String delimiter){
 
@@ -62,24 +62,35 @@ public class IVTMultiTagCommonFunctionalities extends IVTBase {
 		return values;
 	}
 	
-	//this is used to convert array list to map with values having single value tags
-	public static LinkedHashMap<String, String> convertArrayListToMap(String str) {
+	//this is used to convert String to map with values having multiple value tags, we have to pass only String 
+	public static LinkedHashMap<String, String> convertString2Map(String str) {
+		LinkedHashMap<String, String> hm = new LinkedHashMap<>();
 		String key = StringUtils.substringBefore(str, " ");
 		String value = StringUtils.substringAfter(str, " ");
-		LinkedHashMap<String, String> hm = new LinkedHashMap<>();
-		String val = value.replaceAll("\\|", "");
-		hm.put(key, val);
-		return hm;
-	}
-	
-	//this is used to convert array list to map with values having multiple value tags particularly for NC
-	public static LinkedHashMap<String, String> convertArrListToMapNC(String str) {
-		String key = StringUtils.substringBefore(str, " ");
-		String value = StringUtils.substringAfter(str, " ");
-		LinkedHashMap<String, String> hm = new LinkedHashMap<>();
 		hm.put(key, value);
 		return hm;
 	}
+	
+	//Convert String to Map, with delimiter replacement only for Single Tags.
+	public static LinkedHashMap<String,String> convertStr2MapWithDelim(String str) throws Exception {
+        LinkedHashMap<String,String> tempLHM = new LinkedHashMap<>();
+        String key = StringUtils.substringBefore(str, " ");
+		String value = StringUtils.substringAfter(str, " ");
+		String val = value.replaceAll("\\|", "");
+		tempLHM.put(key, val);
+		return tempLHM;
+    }
+	
+	//Convert List to Maps, when we have multiple Values with comma or pipe as delimiter, When we Pass ArrayList
+	public static LinkedHashMap<String,String> convertList2MapMultiValues(List<String> list) throws Exception {
+        LinkedHashMap<String,String> tempLHM = new LinkedHashMap<>();
+       for(String s : list){
+            String key = StringUtils.substringBefore(s," ");
+            String val = StringUtils.substringAfter(s," ");
+            tempLHM.put(key,val);
+        }
+      return tempLHM;
+    }
 
 	public static List<String> fetchSpendCap(String fileName, String tagName) throws Exception{
 		BufferedReader br2 = new BufferedReader(new FileReader(fileName));

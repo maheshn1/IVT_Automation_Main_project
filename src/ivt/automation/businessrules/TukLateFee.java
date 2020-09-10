@@ -17,7 +17,6 @@ public class TukLateFee extends IVTBase {
 	public static List<String> lateFeestagIBM = new ArrayList<>();
 	public static List<String> LateFeestagNC = new ArrayList<>();
 
-
 	public static void compareTukLateFee(String fileIBM, String fileNC) throws Exception {
 		lateFeestagIBM = OTCCommonTagsFunctionality.fetchOTCTypeNameDateAndPriceTag(fileIBM);
 		LateFeestagNC =  OTCCommonTagsFunctionality.fetchOTCTypeNameDateAndPriceTag(fileNC);
@@ -25,12 +24,12 @@ public class TukLateFee extends IVTBase {
 		for(int i = 0;i<lateFeestagIBM.size();i++) {
 
 			LinkedHashMap<String, String> ibm = new LinkedHashMap<>();			
-			ibm = IVTMultiTagCommonFunctionalities.convertArrayListToMap(lateFeestagIBM.get(i));
+			ibm = IVTMultiTagCommonFunctionalities.convertStr2MapWithDelim(lateFeestagIBM.get(i));
 			
 
 			for(int j = 0;j<LateFeestagNC.size();j++) {
 				LinkedHashMap<String, String> nc = new LinkedHashMap<>();
-				nc = IVTMultiTagCommonFunctionalities.convertArrayListToMap(LateFeestagNC.get(j));
+				nc = IVTMultiTagCommonFunctionalities.convertStr2MapWithDelim(LateFeestagNC.get(j));
 				
 
 				if(i==j) {

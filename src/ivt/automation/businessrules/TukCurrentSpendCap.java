@@ -29,22 +29,20 @@ public class TukCurrentSpendCap extends IVTBase{
 
 		ibmTags = IVTMultiTagCommonFunctionalities.fetchSpendCap(fileIBM, o2SpendCapEventsTot);
 		for (String s : ibmTags) {
-			ibmMap = IVTMultiTagCommonFunctionalities.convertArrayListToMap(s);
+			ibmMap = IVTMultiTagCommonFunctionalities.convertString2Map(s);
 			ibmSpendCapValue = IVTMultiTagCommonFunctionalities.getOnlyValues(ibmMap, 4, ",", o2SpendCapEventsTot);
 			ibmSpendCapValue1 = ibmSpendCapValue1 + ibmSpendCapValue;
 			ibmMap.clear();
 			}
-		System.out.println(ibmSpendCapValue1);
-
+		
 		ncTags = IVTMultiTagCommonFunctionalities.fetchSpendCap(fileNC, tukCurrentSpendCap);
 		for (String s1 : ncTags) {
-			ncMap = IVTMultiTagCommonFunctionalities.convertArrListToMapNC(s1);
+			ncMap = IVTMultiTagCommonFunctionalities.convertString2Map(s1);
 			ncSpendCapValue = IVTMultiTagCommonFunctionalities.getOnlyValues(ncMap, 1, "\\|", tukCurrentSpendCap);
 			ncSpendCapValue1 = ncSpendCapValue1 + ncSpendCapValue;
 			ncMap.clear();
 			}
-		System.out.println(ncSpendCapValue1);
-		
+				
 		if(ibmSpendCapValue1!=(ncSpendCapValue1)) {
 			System.out.println("Account Number " + Files.ACCOUNTNUMBER + "::Tag Mapping : " + o2SpendCapEventsTot +" vs "+ tukCurrentSpendCap +" IBM Value:: " + ibmSpendCapValue1
 					+ " NC Value:: " + ncSpendCapValue1);
