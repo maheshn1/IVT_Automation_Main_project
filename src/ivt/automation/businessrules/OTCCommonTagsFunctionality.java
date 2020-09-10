@@ -45,6 +45,7 @@ public class OTCCommonTagsFunctionality {
 				otcPriceTagList.add(map2.get(m));
 			}
 		}
+		br.close();
 		return otcPriceTagList;
 	}
 
@@ -92,6 +93,7 @@ public class OTCCommonTagsFunctionality {
 		for(String k: lateFeesOtcTagList) {
 			//System.out.println(k);
 		}
+		br1.close();
 		return lateFeesOtcTagList;
 	}
 		

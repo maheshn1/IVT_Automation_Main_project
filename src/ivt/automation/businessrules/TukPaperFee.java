@@ -24,25 +24,30 @@ public class TukPaperFee extends IVTBase{
 	public static double ibmValue = 0.0;	
 	
 	public static void compareTukPaperFee(String fileIBM, String fileNC) throws Exception {
+		List<String> ibmlist = new ArrayList<>();
+		List<String> nclist = new ArrayList<>();
+		double nctukMonthlyExtra = 0.0;
+		double ncTukPaperFee = 0.0;
 		
 		tukPaperFeeFormula = IVTBase.propertyFileRead(o2ProdBotTot);
 		tagsIBM.add(o2ProdBotTot);		
-		tagNameAndValueIBM = IVTMultiTagCommonFunctionalities.getTagName(fileIBM,tagsIBM,",");
+		ibmlist = IVTMultiTagCommonFunctionalities.getTagName(fileIBM,tagsIBM);
+		tagNameAndValueIBM = IVTSingleTagCompareFiles.convertList2Map(ibmlist);
 		ibmValue = IVTMultiTagCommonFunctionalities.sumOfTagValues(tagNameAndValueIBM);
-				
+		
+		
 		tagsNC.add(tukPaperFee);
 		tagsNC.add(tukMonthlyExtra_Total);
-		// get Bolt on tags here and do tagsNC.add(bolt-on);
-		tagNameAndValueNC = IVTMultiTagCommonFunctionalities.getTagName(fileNC,tagsNC,"\\|");
+				
+		nclist = IVTMultiTagCommonFunctionalities.getTagName(fileNC,tagsNC);
+		tagNameAndValueNC = IVTMultiTagCommonFunctionalities.convertList2MapMultiValues(nclist);
+				
+		nctukMonthlyExtra = IVTMultiTagCommonFunctionalities.getOnlyValues(tagNameAndValueNC, 0, "\\|", tukMonthlyExtra_Total);
+		ncTukPaperFee = IVTMultiTagCommonFunctionalities.getOnlyValues(tagNameAndValueNC, 0, "\\|", tukPaperFee);
 		
-		tukMonthlyExtra_Total_Values = tagNameAndValueNC.get(tukMonthlyExtra_Total);
-		String newTukMonthlyExtra_Total_Value[] = IVTBase.splitStringValue(tukMonthlyExtra_Total_Values,"\\|");
-		for(int i =0;i<newTukMonthlyExtra_Total_Value.length;i++) {
-			if(i==0) {
-				tagNameAndValueNC.replace(tukMonthlyExtra_Total, newTukMonthlyExtra_Total_Value[i]);
-				break;
-			}
-		}
+		tagNameAndValueNC.replace(tukMonthlyExtra_Total, Double.toString(nctukMonthlyExtra));
+		tagNameAndValueNC.replace(tukPaperFee, Double.toString(ncTukPaperFee));
+		
 		ncValue = IVTMultiTagCommonFunctionalities.sumOfTagValues(tagNameAndValueNC);
 		
 		otcPriceList = OTCCommonTagsFunctionality.fetchOTCPriceTags(fileNC);
