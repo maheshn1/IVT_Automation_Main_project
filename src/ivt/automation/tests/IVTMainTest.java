@@ -1,6 +1,7 @@
 package ivt.automation.tests;
 
 import ivt.automation.businessrules.IVTSingleTagCompareFiles;
+import ivt.automation.businessrules.TukCurrentSpendCap;
 import ivt.automation.businessrules.TukLateFee;
 import ivt.automation.businessrules.TukPaperFee;
 import ivt.automation.utils.Files;
@@ -10,7 +11,7 @@ public class IVTMainTest {
 	public static String NC;
 
 	public static void main(String[] args) throws Exception {
-		TukLateFee tt = new TukLateFee();
+		
 		IVTSingleTagCompareFiles.fetchIBMAndNCFiles();
 
 		for (String str : IVTSingleTagCompareFiles.ibmAndNCFiles) {
@@ -19,9 +20,10 @@ public class IVTMainTest {
 			NC = a[1];
 			//System.out.println(IBM+"\n"+NC);
 			//System.out.println(Files.ACCOUNTNUMBER);
-			//IVTSingleTagCompareFiles.compareIBMAndNCTags(IBM, NC);
-			//TukPaperFee.compareTukPaperFee(IBM, NC);
-			tt.compareTukLateFee(IBM, NC);
+			IVTSingleTagCompareFiles.compareIBMAndNCTags(IBM, NC);
+			TukPaperFee.compareTukPaperFee(IBM, NC);
+			TukLateFee.compareTukLateFee(IBM, NC);
+			TukCurrentSpendCap.compareSpendCap(IBM, NC);
 		}
 	}
 }

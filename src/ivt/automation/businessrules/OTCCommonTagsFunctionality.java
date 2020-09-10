@@ -87,9 +87,7 @@ public class OTCCommonTagsFunctionality {
 		}
 		//System.out.println(map2);
 		for(int m: map2.keySet()) {
-		//	if(map2.get(m).contains("OTCPRICE")) {
 				lateFeesOtcTagList.add(map2.get(m));
-			//}
 		}
 		for(String k: lateFeesOtcTagList) {
 			//System.out.println(k);
