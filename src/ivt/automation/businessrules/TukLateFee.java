@@ -25,36 +25,26 @@ public class TukLateFee extends IVTBase {
 
 			LinkedHashMap<String, String> ibm = new LinkedHashMap<>();			
 			ibm = IVTMultiTagCommonFunctionalities.convertStr2MapWithDelim(lateFeestagIBM.get(i));
-			
+
 
 			for(int j = 0;j<LateFeestagNC.size();j++) {
 				LinkedHashMap<String, String> nc = new LinkedHashMap<>();
 				nc = IVTMultiTagCommonFunctionalities.convertStr2MapWithDelim(LateFeestagNC.get(j));
-				
+
 
 				if(i==j) {
 					for(String tag : ibm.keySet()) {
-							String ibmVal = ibm.get(tag);
-							String ncVal = nc.get(tag);
+						String ibmVal = ibm.get(tag);
+						String ncVal = nc.get(tag);
 
 						if(!ibmVal.equals(ncVal)) {
 							System.out.println("Account Number " + Files.ACCOUNTNUMBER + "::Tag Mapping for Late Payment Fees:" + tag + " IBM Value:: " + ibmVal
 									+ " NC Value:: " + ncVal);
-							IVTExcelReport.setCellValues("IBMNCDiffReport", IBMValue_row, ACCOUNT_NUMBER, Files.ACCOUNTNUMBER);
-							IVTExcelReport.setCellValues("IBMNCDiffReport", IBMValue_row, IBMTAG_NUMBER, tag);
-							IVTExcelReport.setCellValues("IBMNCDiffReport", IBMValue_row++, IBMVALUE_NUMBER, ibmVal);
-							IVTExcelReport.setCellValues("IBMNCDiffReport", NCValue_row, NCTAG_NUMBER, tag);
-							IVTExcelReport.setCellValues("IBMNCDiffReport", NCValue_row++, NCVALUE_NUMBER, ncVal);
-							IVTExcelReport.setCellValues("IBMNCDiffReport", flag_row++, FLAG_NUMBER, "NO");
+							printUnMatchedReportInExcelSheet(tag, ibmVal, tag, ncVal);
 						}
 						else
 						{
-							IVTExcelReport.setCellValues("IBMNCDiffReport", IBMValue_row, ACCOUNT_NUMBER, Files.ACCOUNTNUMBER);
-							IVTExcelReport.setCellValues("IBMNCDiffReport", IBMValue_row, IBMTAG_NUMBER, tag);
-							IVTExcelReport.setCellValues("IBMNCDiffReport", IBMValue_row++, IBMVALUE_NUMBER, ibmVal);
-							IVTExcelReport.setCellValues("IBMNCDiffReport", NCValue_row, NCTAG_NUMBER, tag);
-							IVTExcelReport.setCellValues("IBMNCDiffReport", NCValue_row++, NCVALUE_NUMBER, ncVal);
-							IVTExcelReport.setCellValues("IBMNCDiffReport", flag_row++, FLAG_NUMBER, "YES");
+							printMatchedReportInExcelSheet(tag, ibmVal, tag, ncVal);
 						}
 					}
 				}				
@@ -63,9 +53,4 @@ public class TukLateFee extends IVTBase {
 			ibm.clear();
 		}
 	}
-	
-	
-
-
-
 }

@@ -22,7 +22,7 @@ public class IVTSingleTagCompareFiles extends IVTBase {
 	public static List<String> singleTagsList = new ArrayList<String>();
 	public static LinkedHashMap<String,String> tagNameAndValueIBM = new LinkedHashMap<String,String>();
 	public static LinkedHashMap<String,String> tagNameAndValueNC = new LinkedHashMap<String,String>();
-	
+
 	public static List<String> getIBMNCTagNames(String fileName) throws Exception, Exception {
 		List<String> tempal = new ArrayList<>();
 		BufferedReader br = new BufferedReader(new FileReader(fileName));
@@ -38,61 +38,52 @@ public class IVTSingleTagCompareFiles extends IVTBase {
 		br.close();
 		return tempal;
 	}	
-	
+
 	//Converts List to Map for single tag values which needs delimiter replacement
 	public static LinkedHashMap<String,String> convertList2Map(List<String> list) throws Exception {
-        LinkedHashMap<String,String> tempLHM = new LinkedHashMap<>();
-        for(String s : list){
-            String key = StringUtils.substringBefore(s," ");
-            String val = StringUtils.substringAfter(s," ");
-            String Value = val.replaceAll("\\|", "");
-            tempLHM.put(key,Value);
-        }
-      return tempLHM;
-    }
-		
+		LinkedHashMap<String,String> tempLHM = new LinkedHashMap<>();
+		for(String s : list){
+			String key = StringUtils.substringBefore(s," ");
+			String val = StringUtils.substringAfter(s," ");
+			String Value = val.replaceAll("\\|", "");
+			tempLHM.put(key,Value);
+		}
+		return tempLHM;
+	}
+
 	public static void compareIBMAndNCSingleTags(String fileIBM, String fileNC) throws Exception {
 		//try {
-			singleTagsList = XlsxFile.fetchTagNames(IVTBase.propertyFileRead("IBMNCTAG"),IVTBase.propertyFileRead("NC_IBM_Maps"));
-			
-			tagNameAndValueIBM.clear();
-			List<String> ibmlist = new ArrayList<>();
-			ibmlist = getIBMNCTagNames(fileIBM);
-			tagNameAndValueIBM = convertList2Map(ibmlist);
-			
-			List<String> nclist = new ArrayList<>();
-			tagNameAndValueNC.clear();
-			nclist = getIBMNCTagNames(fileNC);
-			tagNameAndValueNC = convertList2Map(nclist);
-								
-			for (String tag : singleTagsList) {
-				String IBMValue = tagNameAndValueIBM.get(tag);
-				String NCValue = tagNameAndValueNC.get(tag);
-		
-				if (!IBMValue.equalsIgnoreCase(NCValue)) {
-					System.out.println("Account Number " + Files.ACCOUNTNUMBER + "::Tag:" + tag + " IBM Value:: " + IBMValue
-							+ " NC Value:: " + NCValue);
-					IVTExcelReport.setCellValues("IBMNCDiffReport", IBMValue_row, ACCOUNT_NUMBER, Files.ACCOUNTNUMBER);
-					IVTExcelReport.setCellValues("IBMNCDiffReport", IBMValue_row, IBMTAG_NUMBER, tag);
-					IVTExcelReport.setCellValues("IBMNCDiffReport", IBMValue_row++, IBMVALUE_NUMBER, IBMValue);
-					IVTExcelReport.setCellValues("IBMNCDiffReport", NCValue_row, NCTAG_NUMBER, tag);
-					IVTExcelReport.setCellValues("IBMNCDiffReport", NCValue_row++, NCVALUE_NUMBER, NCValue);
-					IVTExcelReport.setCellValues("IBMNCDiffReport", flag_row++, FLAG_NUMBER, "NO");
-				} else {
-				//	 System.out.println("Account Number "+Files.ACCOUNTNUMBER+"::Tag:"+tag+" IBM Value::"
-					//		 +IBMValue+ " NC Value:: "+NCValue);
-					IVTExcelReport.setCellValues("IBMNCDiffReport", IBMValue_row, ACCOUNT_NUMBER, Files.ACCOUNTNUMBER);
-					IVTExcelReport.setCellValues("IBMNCDiffReport", IBMValue_row, IBMTAG_NUMBER, tag);
-					IVTExcelReport.setCellValues("IBMNCDiffReport", IBMValue_row++, IBMVALUE_NUMBER, IBMValue);
-					IVTExcelReport.setCellValues("IBMNCDiffReport", NCValue_row, NCTAG_NUMBER, tag);
-					IVTExcelReport.setCellValues("IBMNCDiffReport", NCValue_row++, NCVALUE_NUMBER, NCValue);
-					IVTExcelReport.setCellValues("IBMNCDiffReport", flag_row++, FLAG_NUMBER, "YES");
-				}
+		singleTagsList = XlsxFile.fetchTagNames(IVTBase.propertyFileRead("IBMNCTAG"),IVTBase.propertyFileRead("NC_IBM_Maps"));
 
+		tagNameAndValueIBM.clear();
+		List<String> ibmlist = new ArrayList<>();
+		ibmlist = getIBMNCTagNames(fileIBM);
+		tagNameAndValueIBM = convertList2Map(ibmlist);
+
+		List<String> nclist = new ArrayList<>();
+		tagNameAndValueNC.clear();
+		nclist = getIBMNCTagNames(fileNC);
+		tagNameAndValueNC = convertList2Map(nclist);
+
+		for (String tag : singleTagsList) {
+			String IBMValue = tagNameAndValueIBM.get(tag);
+			String NCValue = tagNameAndValueNC.get(tag);
+
+			if (!IBMValue.equalsIgnoreCase(NCValue)) {
+				System.out.println("Account Number " + Files.ACCOUNTNUMBER + "::Tag:" + tag + " IBM Value:: " + IBMValue
+						+ " NC Value:: " + NCValue);
+				printUnMatchedReportInExcelSheet(tag, IBMValue, tag, NCValue);
+
+			} else {
+				//	 System.out.println("Account Number "+Files.ACCOUNTNUMBER+"::Tag:"+tag+" IBM Value::"
+				//		 +IBMValue+ " NC Value:: "+NCValue);
+				printMatchedReportInExcelSheet(tag, IBMValue, tag, NCValue);
 			}
-			singleTagsList.clear();
+
+		}
+		singleTagsList.clear();
 		//} 
-			/*catch (NullPointerException e) {
+		/*catch (NullPointerException e) {
 			System.out.println("Respective tag not found");
 		}*/
 	}

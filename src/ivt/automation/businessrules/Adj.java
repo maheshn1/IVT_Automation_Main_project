@@ -35,26 +35,15 @@ public class Adj extends IVTBase{
 
 		ibmAdjValue = IVTMultiTagCommonFunctionalities.getOnlyValues(ibmMapvalue, 3, ",", ibmAdj);
 		ncAdjValue =  IVTMultiTagCommonFunctionalities.getOnlyValues(ncMapValue, 3, "\\|", ncAdj);
-		
+
 		if(ibmAdjValue!=ncAdjValue) {
 			System.out.println("Account Number " + Files.ACCOUNTNUMBER + "::Tag Mapping:" + ibmAdj + " vs "+ncAdj+" IBM Value:: " + ibmAdjValue
 					+ " NC Value:: " + ncAdjValue);
-			IVTExcelReport.setCellValues("IBMNCDiffReport", IBMValue_row, ACCOUNT_NUMBER, Files.ACCOUNTNUMBER);
-			IVTExcelReport.setCellValues("IBMNCDiffReport", IBMValue_row, IBMTAG_NUMBER, ibmAdj);
-			IVTExcelReport.setCellValues("IBMNCDiffReport", IBMValue_row++, IBMVALUE_NUMBER, Double.toString(ibmAdjValue));
-			IVTExcelReport.setCellValues("IBMNCDiffReport", NCValue_row, NCTAG_NUMBER, ncAdj);
-			IVTExcelReport.setCellValues("IBMNCDiffReport", NCValue_row++, NCVALUE_NUMBER, Double.toString(ncAdjValue));
-			IVTExcelReport.setCellValues("IBMNCDiffReport", flag_row++, FLAG_NUMBER, "NO");
+			printUnMatchedReportInExcelSheet(ibmAdj, Double.toString(ibmAdjValue), ncAdj, Double.toString(ncAdjValue));
 		}
 		else
 		{
-			IVTExcelReport.setCellValues("IBMNCDiffReport", IBMValue_row, ACCOUNT_NUMBER, Files.ACCOUNTNUMBER);
-			IVTExcelReport.setCellValues("IBMNCDiffReport", IBMValue_row, IBMTAG_NUMBER, ibmAdj);
-			IVTExcelReport.setCellValues("IBMNCDiffReport", IBMValue_row++, IBMVALUE_NUMBER, Double.toString(ibmAdjValue));
-			IVTExcelReport.setCellValues("IBMNCDiffReport", NCValue_row, NCTAG_NUMBER, ncAdj);
-			IVTExcelReport.setCellValues("IBMNCDiffReport", NCValue_row++, NCVALUE_NUMBER, Double.toString(ncAdjValue));
-			IVTExcelReport.setCellValues("IBMNCDiffReport", flag_row++, FLAG_NUMBER, "YES");
+			printMatchedReportInExcelSheet(ibmAdj, Double.toString(ibmAdjValue), ncAdj, Double.toString(ncAdjValue));
 		}
-	}	
-
+	}
 }

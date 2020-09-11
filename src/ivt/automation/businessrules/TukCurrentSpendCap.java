@@ -33,36 +33,24 @@ public class TukCurrentSpendCap extends IVTBase{
 			ibmSpendCapValue = IVTMultiTagCommonFunctionalities.getOnlyValues(ibmMap, 4, ",", o2SpendCapEventsTot);
 			ibmSpendCapValue1 = ibmSpendCapValue1 + ibmSpendCapValue;
 			ibmMap.clear();
-			}
-		
+		}
+
 		ncTags = IVTMultiTagCommonFunctionalities.fetchSpendCap(fileNC, tukCurrentSpendCap);
 		for (String s1 : ncTags) {
 			ncMap = IVTMultiTagCommonFunctionalities.convertString2Map(s1);
 			ncSpendCapValue = IVTMultiTagCommonFunctionalities.getOnlyValues(ncMap, 1, "\\|", tukCurrentSpendCap);
 			ncSpendCapValue1 = ncSpendCapValue1 + ncSpendCapValue;
 			ncMap.clear();
-			}
-				
+		}
+
 		if(ibmSpendCapValue1!=(ncSpendCapValue1)) {
 			System.out.println("Account Number " + Files.ACCOUNTNUMBER + "::Tag Mapping : " + o2SpendCapEventsTot +" vs "+ tukCurrentSpendCap +" IBM Value:: " + ibmSpendCapValue1
 					+ " NC Value:: " + ncSpendCapValue1);
-			IVTExcelReport.setCellValues("IBMNCDiffReport", IBMValue_row, ACCOUNT_NUMBER, Files.ACCOUNTNUMBER);
-			IVTExcelReport.setCellValues("IBMNCDiffReport", IBMValue_row, IBMTAG_NUMBER, o2SpendCapEventsTot);
-			IVTExcelReport.setCellValues("IBMNCDiffReport", IBMValue_row++, IBMVALUE_NUMBER, Double.toString(ibmSpendCapValue1));
-			IVTExcelReport.setCellValues("IBMNCDiffReport", NCValue_row, NCTAG_NUMBER, tukCurrentSpendCap);
-			IVTExcelReport.setCellValues("IBMNCDiffReport", NCValue_row++, NCVALUE_NUMBER, Double.toString(ncSpendCapValue1));
-			IVTExcelReport.setCellValues("IBMNCDiffReport", flag_row++, FLAG_NUMBER, "NO");
+			printUnMatchedReportInExcelSheet(o2SpendCapEventsTot, Double.toString(ibmSpendCapValue1), tukCurrentSpendCap, Double.toString(ncSpendCapValue1));
 		}
 		else
 		{
-			IVTExcelReport.setCellValues("IBMNCDiffReport", IBMValue_row, ACCOUNT_NUMBER, Files.ACCOUNTNUMBER);
-			IVTExcelReport.setCellValues("IBMNCDiffReport", IBMValue_row, IBMTAG_NUMBER, o2SpendCapEventsTot);
-			IVTExcelReport.setCellValues("IBMNCDiffReport", IBMValue_row++, IBMVALUE_NUMBER, Double.toString(ibmSpendCapValue1));
-			IVTExcelReport.setCellValues("IBMNCDiffReport", NCValue_row, NCTAG_NUMBER, tukCurrentSpendCap);
-			IVTExcelReport.setCellValues("IBMNCDiffReport", NCValue_row++, NCVALUE_NUMBER, Double.toString(ncSpendCapValue1));
-			IVTExcelReport.setCellValues("IBMNCDiffReport", flag_row++, FLAG_NUMBER, "YES");
+			printMatchedReportInExcelSheet(o2SpendCapEventsTot, Double.toString(ibmSpendCapValue1), tukCurrentSpendCap, Double.toString(ncSpendCapValue1));
 		}
 	}
-
-	
 }

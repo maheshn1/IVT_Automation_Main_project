@@ -14,8 +14,8 @@ public class Files extends IVTBase{
 
 	public static File directoryPath_ivt;	
 	public static List<String> IBMAndNCFiles = new ArrayList<>();
-	public static String ACCOUNTNUMBER = null;
-	public static String CCAFILENAME = null;
+	public static List<String> CCAAndNCFiles = new ArrayList<>();
+	
 	//All File Operations , To move different folders
 	//Read IBM and NC Paths (from folders)
 	//Count of Files both IBM and NC
@@ -45,44 +45,63 @@ public class Files extends IVTBase{
 		return ivtFilesPath;
 	}
 
-
 	public static List<String> searchIBMFileForNCFile() throws Exception
 	{
 		List<String> NCFilesPath = new  ArrayList<String>();
 		List<String> IBMFilesPath = new  ArrayList<String>();
-		List<String> CCAFilesPath = new  ArrayList<String>();
+
 		NCFilesPath = fetchFileFromivtDataFilesFolder("NC");                             
 		IBMFilesPath = fetchFileFromivtDataFilesFolder("IBM");
-		CCAFilesPath = fetchFileFromivtDataFilesFolder("CCA");
+
 		String ivtFilePath=IVTBase.propertyFileRead("IVT_Folder");
-		String ibmAcNo="",ncAcNo="", cca = "", ccaAcNo="";
+		String ibmAcNo="",ncAcNo="";
 
 		for(String ncFile : NCFilesPath) {
 			ncAcNo=StringUtils.substringAfter(ncFile, "_");
 			for(String ibmFile : IBMFilesPath) {
 				ibmAcNo=StringUtils.substringAfter(ibmFile,"_");
-				for(String ccaFile: CCAFilesPath) {					
-					CCAFILENAME =StringUtils.substringBefore(ccaFile,".");
-					cca = StringUtils.substringAfter(ccaFile,"_");
-					ccaAcNo = StringUtils.substringBefore(cca,"_");
-					if(ncAcNo.equals(ibmAcNo) && ibmAcNo.equals(ccaAcNo)) {
-						ACCOUNTNUMBER = ibmAcNo;
-						ibmFile=ivtFilePath.concat("IBM_"+ibmAcNo);
-						ncFile=ivtFilePath.concat("NC_"+ncAcNo);
-						ccaFile=ivtFilePath.concat("IBM_"+cca);
-						String finalFiles = ibmFile+"|"+ncFile+"|"+ccaFile;
-						IBMAndNCFiles.add(finalFiles);
-					}
+				if(ncAcNo.equals(ibmAcNo)) {
+					ibmFile=ivtFilePath.concat("IBM_"+ibmAcNo);
+					ncFile=ivtFilePath.concat("NC_"+ncAcNo);
+					String finalFiles = ibmFile+"|"+ncFile;
+					IBMAndNCFiles.add(finalFiles);
 				}
 			}
 		}       
-		for(String k : IBMAndNCFiles) {
+		/*for(String k : IBMAndNCFiles) {
 			System.out.println(k);
-		}
+		}*/
 		return IBMAndNCFiles;
 
 	}
 
+	public static List<String> searchCCAFileForNCFile() throws Exception
+	{
+		String ivtFilePath=IVTBase.propertyFileRead("IVT_Folder");
+		List<String> NCFilesPath = new  ArrayList<String>();
+		List<String> CCAFilesPath = new  ArrayList<String>();
+		NCFilesPath = fetchFileFromivtDataFilesFolder("NC");  
+		CCAFilesPath = fetchFileFromivtDataFilesFolder("CCA");        
+		String ncAcNo="",cca="", ccaIbmAcNo="", finalFiles="";
 
-
+		for(String ncFile : NCFilesPath) {
+			ncAcNo=StringUtils.substringAfter(ncFile, "_");
+			ncFile=ivtFilePath.concat("NC_"+ncAcNo);
+			for(String ccaFile : CCAFilesPath) { //IBM_1234_12_CCA
+				cca = StringUtils.substringAfter(ccaFile,"_");  //1234_12_CCA.txt
+				ccaIbmAcNo = StringUtils.substringBefore(cca,"_"); //1234
+				if(ncAcNo.equals(ccaIbmAcNo)) {					
+					ccaFile = ivtFilePath.concat("IBM_"+cca);
+					finalFiles = finalFiles+"|"+ccaFile;
+				}
+			}
+			String finalFileList = ncFile+finalFiles;
+			CCAAndNCFiles.add(finalFileList);
+			finalFiles="";			
+		}       
+		/*for(String k : CCAAndNCFiles) {
+			System.out.println(k);
+		}*/
+		return CCAAndNCFiles;
+	}
 }

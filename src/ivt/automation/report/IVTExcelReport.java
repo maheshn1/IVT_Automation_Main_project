@@ -39,13 +39,13 @@
 	workbook = new XSSFWorkbook();
 	fos = new FileOutputStream(file);
 	//workbook = (XSSFWorkbook) WorkbookFactory.create(file);
-	XSSFSheet IBMNCDiffReport = workbook.createSheet("IBMNCDiffReport");
-	Row row = IBMNCDiffReport.createRow(0);
+	XSSFSheet IBM_NC_AllTags = workbook.createSheet("IBM_NC_AllTags");
+	Row row = IBM_NC_AllTags.createRow(0);
 	
 	//Create header CellStyle
 	 XSSFFont headerFont = workbook.createFont();
 	 headerFont.setColor(IndexedColors.WHITE.index);
-	 CellStyle headerCellStyle = IBMNCDiffReport.getWorkbook().createCellStyle();
+	 CellStyle headerCellStyle = IBM_NC_AllTags.getWorkbook().createCellStyle();
 	 // fill foreground color ...
 	 headerCellStyle.setFillForegroundColor(IndexedColors.BLUE_GREY.index);
 	 // and solid fill pattern produces solid grey cell fill
@@ -62,43 +62,102 @@
 	Cell CustomerAccount_No = row.createCell(0);
 	CustomerAccount_No.setCellStyle(headerCellStyle);
 	CustomerAccount_No.setCellValue("CustomerAccount_No");
-	
+	/*
 	Cell IBM_CCA_File = row.createCell(1);
 	IBM_CCA_File.setCellStyle(headerCellStyle);
 	IBM_CCA_File.setCellValue("IBM_CCA_File");
-	
-	Cell IBM_Tag = row.createCell(2);
+	*/
+	Cell IBM_Tag = row.createCell(1);
 	IBM_Tag.setCellStyle(headerCellStyle);
 	IBM_Tag.setCellValue("IBM_Tag");
 	
-	Cell IBM_TagValue = row.createCell(3);
+	Cell IBM_TagValue = row.createCell(2);
 	IBM_TagValue.setCellStyle(headerCellStyle);
 	IBM_TagValue.setCellValue("IBM_TagValue");
 	
-	Cell NC_Tag = row.createCell(4);
+	Cell NC_Tag = row.createCell(3);
 	NC_Tag.setCellStyle(headerCellStyle);
 	NC_Tag.setCellValue("NC_Tag");
 	
-	Cell NC_TagValue = row.createCell(5);
+	Cell NC_TagValue = row.createCell(4);
 	NC_TagValue.setCellStyle(headerCellStyle);
 	NC_TagValue.setCellValue("NC_TagValue");
 	
-	Cell Difference = row.createCell(6);
+	Cell Difference = row.createCell(5);
 	Difference.setCellStyle(headerCellStyle);
 	Difference.setCellValue("(NC_Tag_Value-IBM_TagValue)");
 	
-	Cell Match_Flag = row.createCell(7);
+	Cell Match_Flag = row.createCell(6);
 	Match_Flag.setCellStyle(headerCellStyle);
 	Match_Flag.setCellValue("Match_Flag");
 	
 	workbook.write(fos);
 	fos.close();
 	}
+	
+	public static void createCCAExcelSheet() throws Exception {
+		
+		//workbook = new XSSFWorkbook();
+		
+		fos = new FileOutputStream(file);
+		XSSFSheet IBM_NC_CCATags = workbook.createSheet("IBM_NC_CCATags");
+		Row row = IBM_NC_CCATags.createRow(0);
+		
+		//Create header CellStyle
+		 XSSFFont headerFont = workbook.createFont();
+		 headerFont.setColor(IndexedColors.WHITE.index);
+		 CellStyle headerCellStyle = IBM_NC_CCATags.getWorkbook().createCellStyle();
+		 // fill foreground color ...
+		 headerCellStyle.setFillForegroundColor(IndexedColors.BLUE_GREY.index);
+		 // and solid fill pattern produces solid grey cell fill
+		 headerCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		 
+		 //to set Border to the cell
+		 headerCellStyle.setBorderBottom(BorderStyle.MEDIUM);
+		 headerCellStyle.setBorderLeft(BorderStyle.DOUBLE);
+		 headerCellStyle.setBorderRight(BorderStyle.THICK);
+		 headerCellStyle.setBorderTop(BorderStyle.DASHED);
+		 
+		 headerCellStyle.setFont(headerFont);
+		
+		Cell CustomerAccount_No = row.createCell(0);
+		CustomerAccount_No.setCellStyle(headerCellStyle);
+		CustomerAccount_No.setCellValue("CustomerAccount_No");
+		
+		Cell IBM_CCA_File = row.createCell(1);
+		IBM_CCA_File.setCellStyle(headerCellStyle);
+		IBM_CCA_File.setCellValue("IBM_CCA_File");
+		
+		Cell IBM_Tag = row.createCell(2);
+		IBM_Tag.setCellStyle(headerCellStyle);
+		IBM_Tag.setCellValue("IBM_Tag");
+		
+		Cell IBM_TagValue = row.createCell(3);
+		IBM_TagValue.setCellStyle(headerCellStyle);
+		IBM_TagValue.setCellValue("IBM_TagValue");
+		
+		Cell NC_Tag = row.createCell(4);
+		NC_Tag.setCellStyle(headerCellStyle);
+		NC_Tag.setCellValue("NC_Tag");
+		
+		Cell NC_TagValue = row.createCell(5);
+		NC_TagValue.setCellStyle(headerCellStyle);
+		NC_TagValue.setCellValue("NC_TagValue");
+		
+		Cell Difference = row.createCell(6);
+		Difference.setCellStyle(headerCellStyle);
+		Difference.setCellValue("(NC_Tag_Value-IBM_TagValue)");
+		
+		Cell Match_Flag = row.createCell(7);
+		Match_Flag.setCellStyle(headerCellStyle);
+		Match_Flag.setCellValue("Match_Flag");
+		
+		workbook.write(fos);
+		fos.close();
+		}
 		
 	public static void setCellValues(String sheetName, int rowNum, int cellNum,String data) throws Exception
-	{
-	
-		
+	{	
 	sheet = workbook.getSheet(sheetName);
 	
 	row = sheet.getRow(rowNum);
