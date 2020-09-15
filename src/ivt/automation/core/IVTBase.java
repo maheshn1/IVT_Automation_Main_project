@@ -34,7 +34,7 @@ public class IVTBase {
 
 	public static List<String> ibmAndNCFiles = new ArrayList<>();
 	public static List<String> ccaAndNCFiles = new ArrayList<>();
-	public static String propFile = "C:\\Users\\094539\\Desktop\\IVT DOCS\\Code\\IVT_Automation_WorkSapce\\IVT_Automation_Main_project\\ivtAuto.properties";
+	public static String propFile = "C:\\Users\\204747\\IVT_WorkSpace\\IVT_Automation_Main_project\\ivtAuto.properties";
 	public static Properties prop = new Properties();
 
 	public static List<String> fetchIBMAndNCFiles() throws Exception {
