@@ -2,7 +2,6 @@ package ivt.automation.businessrules;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -14,14 +13,14 @@ import ivt.automation.core.IVTBase;
 
 public class IVTMultiTagCommonFunctionalities extends IVTBase {
 
-	public static String line = null;
+	public static BufferedReader br;
 	public static LinkedHashMap<String,String> tagNameAndValue = new LinkedHashMap<String,String>();
 	public static LinkedHashMap<String,String> extractedTagNameAndValue = new LinkedHashMap<String,String>();
-	public static double values = 0.0;
-
+	public static String line = null;
+	
 	public static List<String> getTagName(String fileName,List<String> taglist) throws Exception, Exception {
 		List<String> tempAl = new ArrayList<>();
-		BufferedReader br = new BufferedReader(new FileReader(fileName));
+		br = new BufferedReader(new FileReader(fileName));
 		while (((line = br.readLine()) != null)) {
 			int count = taglist.size();
 			for (int i = 0; i < count; i++) {
@@ -33,29 +32,11 @@ public class IVTMultiTagCommonFunctionalities extends IVTBase {
 		}
 		br.close();
 		return tempAl;
-	}	
-
-	public static LinkedHashMap<String,String> extractTagNameAndValues(String str, String delimiter){
-
-		String tag = StringUtils.substringBefore(str, " ");
-		String values = StringUtils.substringAfter(str, " ");		
-		String tagname[] = splitStringValue(values,delimiter);
-
-		String val, value = "";
-		if(tagname.length==1) {
-			val = tagname[0];
-			value = val.replaceAll("\\|", "");
-			extractedTagNameAndValue.put(tag, value);
-			return extractedTagNameAndValue;
-		}
-		else {
-			extractedTagNameAndValue.put(tag, values);    		
-			return extractedTagNameAndValue;
-		}
 	}
 
+	//To calculate single tag single value sum
 	public static double sumOfTagValues(Map<String, String> tagNameAndValueNC) {
-		values = 0.0;
+		double values = 0.0;
 		for(String v : tagNameAndValueNC.keySet()) {
 			values = values + Double.parseDouble(tagNameAndValueNC.get(v));
 		}		
@@ -92,40 +73,31 @@ public class IVTMultiTagCommonFunctionalities extends IVTBase {
       return tempLHM;
     }
 
-	public static List<String> fetchSpendCap(String fileName, String tagName) throws Exception{
-		BufferedReader br2 = new BufferedReader(new FileReader(fileName));
+	public static List<String> fetchMultiOccurenceTag(String fileName, String tagName) throws Exception{
+		br = new BufferedReader(new FileReader(fileName));
 		String line = null;
 		int itr = 1;
 		LinkedHashMap<Integer,String> map = new LinkedHashMap<>();
 		LinkedHashMap<Integer,String> map1 = new LinkedHashMap<>();
-		LinkedHashMap<Integer,String> map2 = new LinkedHashMap<>();
-		List<String> o2SpendCapEventsTotTagList = new ArrayList<>();
+		List<String> multiOccurenceTagList = new ArrayList<>();
 
-		o2SpendCapEventsTotTagList.clear();
-		while((line = br2.readLine()) != null ) {
+		multiOccurenceTagList.clear();
+		while((line = br.readLine()) != null ) {
 			map.put(itr++,line );
 		}
 		for(int i : map.keySet()) {
-			if(map.get(i).contains("SPENDCAP")) {
+			if(map.get(i).startsWith(tagName)) {
 				map1.put(i, map.get(i));
 			}
 		}
-		for(int i : map1.keySet()) {
-			for(int j : map1.keySet()) {
-				if(map1.get(j).startsWith(tagName)) {
-					map2.put(j, map1.get(j));
-				}
-			}				
-		}
-		//System.out.println(map2);
 		
-		for(int m: map2.keySet()) {
-			o2SpendCapEventsTotTagList.add(map2.get(m));
+		for(int m: map1.keySet()) {
+			multiOccurenceTagList.add(map1.get(m));
 		}
-		/*for(String k: o2SpendCapEventsTotTagList) {
+		/*for(String k: multiOccurenceTagList) {
 			System.out.println(k);
 		}*/
-		return o2SpendCapEventsTotTagList;
+		return multiOccurenceTagList;
 	}
 	
 	public static double getOnlyValues(LinkedHashMap<String, String> map, int position, String delimiter, String key) {
@@ -138,6 +110,5 @@ public class IVTMultiTagCommonFunctionalities extends IVTBase {
 			}
 		}
 		return d;
-	}
-
+	}	
 }

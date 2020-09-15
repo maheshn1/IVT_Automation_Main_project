@@ -9,8 +9,6 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 import ivt.automation.core.IVTBase;
-import ivt.automation.report.IVTExcelReport;
-import ivt.automation.utils.Files;
 import ivt.automation.utils.XlsxFile;
 
 //Actual Comparison of two files
@@ -53,14 +51,18 @@ public class IVTSingleTagCompareFiles extends IVTBase {
 
 	public static void compareIBMAndNCSingleTags(String fileIBM, String fileNC) throws Exception {
 		//try {
+		List<String> ibmlist = new ArrayList<>();		
+		List<String> nclist = new ArrayList<>();
+		double ibmDoubleValue =0.0;
+		double ncDoubleValue =0.0;
+		double diff =0.0;
+
 		singleTagsList = XlsxFile.fetchTagNames(IVTBase.propertyFileRead("IBMNCTAG"),IVTBase.propertyFileRead("NC_IBM_Maps"));
 
-		tagNameAndValueIBM.clear();
-		List<String> ibmlist = new ArrayList<>();
+		tagNameAndValueIBM.clear();		
 		ibmlist = getIBMNCTagNames(fileIBM);
 		tagNameAndValueIBM = convertList2Map(ibmlist);
 
-		List<String> nclist = new ArrayList<>();
 		tagNameAndValueNC.clear();
 		nclist = getIBMNCTagNames(fileNC);
 		tagNameAndValueNC = convertList2Map(nclist);
@@ -70,14 +72,30 @@ public class IVTSingleTagCompareFiles extends IVTBase {
 			String NCValue = tagNameAndValueNC.get(tag);
 
 			if (!IBMValue.equalsIgnoreCase(NCValue)) {
-				System.out.println("Account Number " + Files.ACCOUNTNUMBER + "::Tag:" + tag + " IBM Value:: " + IBMValue
+
+				if(!(tag.equalsIgnoreCase("ACCOUNTNO") || tag.equalsIgnoreCase("BILLDATE") || tag.equalsIgnoreCase("PAYMENTDUEDATE") 
+						|| tag.equalsIgnoreCase("INVOICESTART") || tag.equalsIgnoreCase("INVOICEEND"))) {
+					
+					ibmDoubleValue = Double.parseDouble(IBMValue);
+					ncDoubleValue = Double.parseDouble(NCValue);
+
+					if(ibmDoubleValue > ncDoubleValue) {
+						diff = ibmDoubleValue - ncDoubleValue;				
+					}
+					else {
+						diff = ncDoubleValue - ibmDoubleValue;
+					}
+				}
+				System.out.println("Account Number " + ACCOUNTNUMBER + "::Tag:" + tag + " IBM Value:: " + IBMValue
 						+ " NC Value:: " + NCValue);
-				printUnMatchedReportInExcelSheet(tag, IBMValue, tag, NCValue);
+				printUnMatchedReportInExcelSheet(tag, IBMValue, tag, NCValue, Double.toString(diff));
+				diff = 0.0;
 
 			} else {
-				//	 System.out.println("Account Number "+Files.ACCOUNTNUMBER+"::Tag:"+tag+" IBM Value::"
+				//	 System.out.println("Account Number "+ ACCOUNTNUMBER+"::Tag:"+tag+" IBM Value::"
 				//		 +IBMValue+ " NC Value:: "+NCValue);
-				printMatchedReportInExcelSheet(tag, IBMValue, tag, NCValue);
+				diff = 0.0;
+				printMatchedReportInExcelSheet(tag, IBMValue, tag, NCValue, Double.toString(diff));
 			}
 
 		}

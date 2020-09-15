@@ -12,9 +12,7 @@ import ivt.automation.core.IVTBase;
 
 public class Files extends IVTBase{
 
-	public static File directoryPath_ivt;	
-	public static List<String> IBMAndNCFiles = new ArrayList<>();
-	public static List<String> CCAAndNCFiles = new ArrayList<>();
+	public static File directoryPath_ivt;
 	
 	//All File Operations , To move different folders
 	//Read IBM and NC Paths (from folders)
@@ -49,6 +47,7 @@ public class Files extends IVTBase{
 	{
 		List<String> NCFilesPath = new  ArrayList<String>();
 		List<String> IBMFilesPath = new  ArrayList<String>();
+		List<String> IBMAndNCFiles = new ArrayList<>();
 
 		NCFilesPath = fetchFileFromivtDataFilesFolder("NC");                             
 		IBMFilesPath = fetchFileFromivtDataFilesFolder("IBM");
@@ -72,7 +71,6 @@ public class Files extends IVTBase{
 			System.out.println(k);
 		}*/
 		return IBMAndNCFiles;
-
 	}
 
 	public static List<String> searchCCAFileForNCFile() throws Exception
@@ -80,6 +78,8 @@ public class Files extends IVTBase{
 		String ivtFilePath=IVTBase.propertyFileRead("IVT_Folder");
 		List<String> NCFilesPath = new  ArrayList<String>();
 		List<String> CCAFilesPath = new  ArrayList<String>();
+		List<String> CCAAndNCFiles = new ArrayList<>();
+		
 		NCFilesPath = fetchFileFromivtDataFilesFolder("NC");  
 		CCAFilesPath = fetchFileFromivtDataFilesFolder("CCA");        
 		String ncAcNo="",cca="", ccaIbmAcNo="", finalFiles="";

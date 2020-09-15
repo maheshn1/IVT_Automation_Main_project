@@ -1,6 +1,5 @@
 package ivt.automation.core;
 
-import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +34,8 @@ public class IVTBase {
 
 	public static List<String> ibmAndNCFiles = new ArrayList<>();
 	public static List<String> ccaAndNCFiles = new ArrayList<>();
-	static String propFile = "C:\\Users\\094539\\Desktop\\IVT DOCS\\Code\\IVT_Automation_WorkSapce\\IVT_Automation_Main_project\\ivtAuto.properties";
-	static Properties prop = new Properties();
-	static BufferedReader br;
+	public static String propFile = "C:\\Users\\094539\\Desktop\\IVT DOCS\\Code\\IVT_Automation_WorkSapce\\IVT_Automation_Main_project\\ivtAuto.properties";
+	public static Properties prop = new Properties();
 
 	public static List<String> fetchIBMAndNCFiles() throws Exception {
 		IVTExcelReport.createExcelSheet();
@@ -62,23 +60,25 @@ public class IVTBase {
 		return newVal;
 	}
 
-	public static void printUnMatchedReportInExcelSheet(String ibmTag, String ibmValue, String ncTag, String ncValue) throws Exception 
+	public static void printUnMatchedReportInExcelSheet(String ibmTag, String ibmValue, String ncTag, String ncValue, String difference) throws Exception 
 	{
 		IVTExcelReport.setCellValues(sheetName, IBMValue_row, ACCOUNT_NUMBER, ACCOUNTNUMBER);
 		IVTExcelReport.setCellValues(sheetName, IBMValue_row, IBMTAG_NUMBER, ibmTag);
 		IVTExcelReport.setCellValues(sheetName, IBMValue_row++, IBMVALUE_NUMBER, ibmValue);
 		IVTExcelReport.setCellValues(sheetName, NCValue_row, NCTAG_NUMBER, ncTag);
-		IVTExcelReport.setCellValues(sheetName, NCValue_row++, NCVALUE_NUMBER, ncValue);
+		IVTExcelReport.setCellValues(sheetName, NCValue_row, NCVALUE_NUMBER, ncValue);
+		IVTExcelReport.setCellValues(sheetName, NCValue_row++, DIFFERENCE_NUMBER, difference);
 		IVTExcelReport.setCellValues(sheetName, flag_row++, FLAG_NUMBER, "NO");
 	}
 	
-	public static void printMatchedReportInExcelSheet(String ibmTag, String ibmValue, String ncTag, String ncValue) throws Exception 
+	public static void printMatchedReportInExcelSheet(String ibmTag, String ibmValue, String ncTag, String ncValue, String difference) throws Exception 
 	{
 		IVTExcelReport.setCellValues(sheetName, IBMValue_row, ACCOUNT_NUMBER, ACCOUNTNUMBER);
 		IVTExcelReport.setCellValues(sheetName, IBMValue_row, IBMTAG_NUMBER, ibmTag);
 		IVTExcelReport.setCellValues(sheetName, IBMValue_row++, IBMVALUE_NUMBER, ibmValue);
 		IVTExcelReport.setCellValues(sheetName, NCValue_row, NCTAG_NUMBER, ncTag);
-		IVTExcelReport.setCellValues(sheetName, NCValue_row++, NCVALUE_NUMBER, ncValue);
+		IVTExcelReport.setCellValues(sheetName, NCValue_row, NCVALUE_NUMBER, ncValue);
+		IVTExcelReport.setCellValues(sheetName, NCValue_row++, DIFFERENCE_NUMBER, difference);
 		IVTExcelReport.setCellValues(sheetName, flag_row++, FLAG_NUMBER, "YES");
 	}
 

@@ -10,6 +10,7 @@ import ivt.automation.businessrules.IVTSingleTagCompareFiles;
 import ivt.automation.businessrules.TukAirTimePlanTotal;
 import ivt.automation.businessrules.TukCCATotal;
 import ivt.automation.businessrules.TukCurrentSpendCap;
+import ivt.automation.businessrules.TukDiscountLineTotal;
 import ivt.automation.businessrules.TukLateFee;
 import ivt.automation.businessrules.TukPaperFee;
 import ivt.automation.core.IVTBase;
@@ -34,6 +35,7 @@ public class IVTMainTest {
 			TukLateFee.compareTukLateFee(IBM, NC);
 			TukCurrentSpendCap.compareSpendCap(IBM, NC);
 			TukAirTimePlanTotal.compareAirTimePlanTotal(IBM,NC);
+			TukDiscountLineTotal.compareDiscountLineTotal(IBM,NC);
 		}
 		
 		for (String str : IVTBase.fetchCCAAndNCFiles()) {

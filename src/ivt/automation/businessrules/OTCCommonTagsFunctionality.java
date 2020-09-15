@@ -2,7 +2,6 @@ package ivt.automation.businessrules;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -11,13 +10,14 @@ public class OTCCommonTagsFunctionality {
 
 	public static List<String> fetchOTCPriceTags(String fileName) throws Exception {
 		
-		BufferedReader br = new BufferedReader(new FileReader(fileName));
-		String line = null;
-		int itr = 1;
+		BufferedReader br = new BufferedReader(new FileReader(fileName));		
 		LinkedHashMap<Integer,String> map = new LinkedHashMap<>();
 		LinkedHashMap<Integer,String> map1 = new LinkedHashMap<>();
 		LinkedHashMap<Integer,String> map2 = new LinkedHashMap<>();
 		List<String> otcPriceTagList = new ArrayList<>();
+		String line = null;
+		int itr = 1;
+		
 		while((line = br.readLine()) != null ) {
 			map.put(itr++,line );
 		}
@@ -52,12 +52,13 @@ public class OTCCommonTagsFunctionality {
 	public static List<String> fetchOTCTypeNameDateAndPriceTag(String fileName) throws Exception {
 		
 		BufferedReader br1 = new BufferedReader(new FileReader(fileName));
-		String line = null;
-		int itr = 1;
 		LinkedHashMap<Integer,String> map = new LinkedHashMap<>();
 		LinkedHashMap<Integer,String> map1 = new LinkedHashMap<>();
 		LinkedHashMap<Integer,String> map2 = new LinkedHashMap<>();
 		List<String> lateFeesOtcTagList = new ArrayList<>();
+		String line = null;
+		int itr = 1;
+
 		while((line = br1.readLine()) != null ) {
 			map.put(itr++,line );
 		}
@@ -90,17 +91,12 @@ public class OTCCommonTagsFunctionality {
 		for(int m: map2.keySet()) {
 				lateFeesOtcTagList.add(map2.get(m));
 		}
-		for(String k: lateFeesOtcTagList) {
-			//System.out.println(k);
-		}
+//		for(String k: lateFeesOtcTagList) {
+//			//System.out.println(k);
+//		}
 		br1.close();
 		return lateFeesOtcTagList;
 	}
-		
-	
-	
-	
-
 }
 
 

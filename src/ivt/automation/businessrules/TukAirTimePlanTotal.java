@@ -5,8 +5,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import ivt.automation.core.IVTBase;
-import ivt.automation.report.IVTExcelReport;
-import ivt.automation.utils.Files;
 
 public class TukAirTimePlanTotal extends IVTBase {
 
@@ -23,6 +21,7 @@ public class TukAirTimePlanTotal extends IVTBase {
 		List<String> nctags = new ArrayList<>();
 		double ibmAirTimeTotalValue = 0.0;
 		double ncAirTimeValue = 0.0;
+		double diff = 0.0;
 
 		ibmtags.add(o2ProdLRTot);
 		nctags.add(tukAirTimePlanTotal);
@@ -37,13 +36,19 @@ public class TukAirTimePlanTotal extends IVTBase {
 		ncAirTimeValue = Double.parseDouble(ncMapValue.get(tukAirTimePlanTotal));
 
 		if(ibmAirTimeTotalValue!=ncAirTimeValue) {
-			System.out.println("Account Number " + Files.ACCOUNTNUMBER + "::Tag Mapping:" + o2ProdLRTot + " vs "+tukAirTimePlanTotal+" IBM Value:: " + ibmAirTimeTotalValue
+			if(ibmAirTimeTotalValue > ncAirTimeValue) {
+				diff = ibmAirTimeTotalValue - ncAirTimeValue;				
+			}
+			else {
+				diff = ncAirTimeValue - ibmAirTimeTotalValue;
+			}
+			System.out.println("Account Number " + ACCOUNTNUMBER + "::Tag Mapping:" + o2ProdLRTot + " vs "+tukAirTimePlanTotal+" IBM Value:: " + ibmAirTimeTotalValue
 					+ " NC Value:: " + ncAirTimeValue);
-			printUnMatchedReportInExcelSheet(o2ProdLRTot, Double.toString(ibmAirTimeTotalValue), tukAirTimePlanTotal, Double.toString(ncAirTimeValue));
+			printUnMatchedReportInExcelSheet(o2ProdLRTot, Double.toString(ibmAirTimeTotalValue), tukAirTimePlanTotal, Double.toString(ncAirTimeValue), Double.toString(diff));
 		}
 		else
 		{
-			printMatchedReportInExcelSheet(o2ProdLRTot, Double.toString(ibmAirTimeTotalValue), tukAirTimePlanTotal, Double.toString(ncAirTimeValue));
+			printMatchedReportInExcelSheet(o2ProdLRTot, Double.toString(ibmAirTimeTotalValue), tukAirTimePlanTotal, Double.toString(ncAirTimeValue), Double.toString(diff));
 		}
 	}
 }
