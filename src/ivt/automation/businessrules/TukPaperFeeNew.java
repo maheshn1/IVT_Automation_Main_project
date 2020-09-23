@@ -31,13 +31,25 @@ public class TukPaperFeeNew extends IVTBase{
 
 		tukPaperFeeFormula = IVTBase.propertyFileRead(o2ProdBotTot);
 		
-		tagsIBM.add(o2ProdBotTot);		
+		tagsIBM.add(o2ProdBotTot);
 		ibmlist = IVTMultiTagCommonFunctionalities.getTagName(fileIBM,tagsIBM);
+		if(!(ibmlist.isEmpty())) {
 		tagNameAndValueIBM = IVTSingleTagCompareFiles.convertList2Map(ibmlist);
-		ibmValue = IVTMultiTagCommonFunctionalities.sumOfTagValues(tagNameAndValueIBM);
-
+		}
+		else {
+			o2ProdBotTot = null;
+		}
+		try {
+			if(tagNameAndValueIBM.get(o2ProdBotTot) != null && !(tagNameAndValueIBM.get(o2ProdBotTot).isEmpty())) { 
+				ibmValue =  IVTMultiTagCommonFunctionalities.sumOfTagValues(tagNameAndValueIBM);
+			}			
+		}
+		catch(Exception e) {
+			System.out.println("IBM Tag Value is not Present");
+		} 
+	
 		ncTukPaperFee = OTCCommonTagsFunctionality.fetchOTCPriceTags(fileNC,"OTCTYPENAME",tukPaperFee);
-		
+				
 		ncSaProdlist = IVTMultiTagCommonFunctionalities.fetchMultiOccurenceTag(fileNC,tukMonthlyExtra_Total);
 		for (String s1 : ncSaProdlist) {
 			SaProdValue = IVTMultiTagCommonFunctionalities.convertString2Map(s1);

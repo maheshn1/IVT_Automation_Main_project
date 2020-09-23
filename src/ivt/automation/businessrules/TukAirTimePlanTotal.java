@@ -27,18 +27,31 @@ public class TukAirTimePlanTotal extends IVTBase {
 		ibmtags.add(o2ProdLRTot);
 
 		ibmlist = IVTMultiTagCommonFunctionalities.getTagName(ibmFile,ibmtags);
-		ibmMapvalue = IVTSingleTagCompareFiles.convertList2Map(ibmlist);
-		ibmAirTimeTotalValue = Double.parseDouble(ibmMapvalue.get(o2ProdLRTot));
-		
-		ncSubslist = IVTMultiTagCommonFunctionalities.fetchMultiOccurenceTag(ncFile,tukAirTimePlanTotal);
-		for (String s1 : ncSubslist) {
-			subsValue = IVTMultiTagCommonFunctionalities.convertString2Map(s1);
-			ncSubsCharge = IVTMultiTagCommonFunctionalities.getOnlyValues(subsValue, 3, "\\|", tukAirTimePlanTotal);
-			ncSubsTaxCode = (int)IVTMultiTagCommonFunctionalities.getOnlyValues(subsValue, 6, "\\|", tukAirTimePlanTotal);
-			ncAirTimeValue= ncAirTimeValue + OTCCommonTagsFunctionality.taxCodeCalculation(ncSubsCharge, ncSubsTaxCode);			
-			subsValue.clear();
+		if(!(ibmlist.isEmpty())){
+			ibmMapvalue = IVTSingleTagCompareFiles.convertList2Map(ibmlist);
+		}	
+		else {
+			o2ProdLRTot = null;
 		}
-
+		try {
+			if(ibmMapvalue.get(o2ProdLRTot) != null && !(ibmMapvalue.get(o2ProdLRTot).isEmpty())) { 
+				ibmAirTimeTotalValue = Double.parseDouble(ibmMapvalue.get(o2ProdLRTot));
+			}			
+		}
+		catch(Exception e) {
+			System.out.println("IBM Tag Value is not Present");
+		} 
+		System.out.println(ibmAirTimeTotalValue);
+		ncSubslist = IVTMultiTagCommonFunctionalities.fetchMultiOccurenceTag(ncFile,tukAirTimePlanTotal);
+		if(!(ncSubslist.isEmpty())){
+			for (String s1 : ncSubslist) {
+				subsValue = IVTMultiTagCommonFunctionalities.convertString2Map(s1);
+				ncSubsCharge = IVTMultiTagCommonFunctionalities.getOnlyValues(subsValue, 3, "\\|", tukAirTimePlanTotal);
+				ncSubsTaxCode = (int)IVTMultiTagCommonFunctionalities.getOnlyValues(subsValue, 6, "\\|", tukAirTimePlanTotal);
+				ncAirTimeValue= ncAirTimeValue + OTCCommonTagsFunctionality.taxCodeCalculation(ncSubsCharge, ncSubsTaxCode);			
+				subsValue.clear();
+			}
+		}
 		if(ibmAirTimeTotalValue!=ncAirTimeValue) {
 			if(ibmAirTimeTotalValue > ncAirTimeValue) {
 				diff = ibmAirTimeTotalValue - ncAirTimeValue;				

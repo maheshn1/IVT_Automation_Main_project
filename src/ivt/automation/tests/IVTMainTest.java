@@ -25,7 +25,7 @@ public class IVTMainTest {
 			//IVTSingleTagCompareFiles.compareIBMAndNCSingleTags(IBM, NC);
 			TukPaperFeeNew.compareTukPaperFee(IBM, NC);	
 			//TukLateFee.compareTukLateFee(IBM, NC);
-			TukAirTimePlanTotal.compareAirTimePlanTotal(IBM,NC);
+			//TukAirTimePlanTotal.compareAirTimePlanTotal(IBM,NC);
 		}
 	}
 }

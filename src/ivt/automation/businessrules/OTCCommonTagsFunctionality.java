@@ -71,7 +71,7 @@ public class OTCCommonTagsFunctionality {
 			}
 		}	
 		br1.close();
-		System.out.println(finalOtcPrice);
+		//System.out.println(finalOtcPrice);
 		return finalOtcPrice;
 	}
 
