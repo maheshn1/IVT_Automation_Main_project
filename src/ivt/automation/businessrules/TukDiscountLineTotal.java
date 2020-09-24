@@ -8,11 +8,14 @@ import ivt.automation.core.IVTBase;
 
 public class TukDiscountLineTotal extends IVTBase{
 
-	public static String tukDiscountLineTotal="TUKDISCOUNTLINE_TOTAL";
-	public static String accDiscPeriodDiscount="ACCDISCPERIODDISCOUNT", accDiscTaxCode ="ACCDISCTAXCODE";	
-	public static String accDiscTaxCodeFormula = null;
+	public String tukDiscountLineTotal="TUKDISCOUNTLINE_TOTAL";
+	public String accDiscPeriodDiscount="ACCDISCPERIODDISCOUNT", accDiscTaxCode ="ACCDISCTAXCODE";	
+	public String accDiscTaxCodeFormula = null;
 	
-	public static void compareDiscountLineTotal(String fileIBM, String fileNC) throws Exception {
+	public void compareDiscountLineTotal(String fileIBM, String fileNC) throws Exception {
+		
+		IVTMultiTagCommonFunctionalities ivtMultiTagCommonFunction = new IVTMultiTagCommonFunctionalities();
+		IVTSingleTagCompareFiles ivtSingleTagFunction = new IVTSingleTagCompareFiles();
 		
 		LinkedHashMap<String,String> discTagsAndValueIBM = new LinkedHashMap<String,String>();
 		LinkedHashMap<String,String> discTagsAndValueNC = new LinkedHashMap<String,String>();
@@ -31,25 +34,43 @@ public class TukDiscountLineTotal extends IVTBase{
 		double ibmFinalDiscValue = 0.0;
 		double diff = 0.0;
 
-		accDiscTaxCodeFormula = IVTBase.propertyFileRead(tukDiscountLineTotal);
+		accDiscTaxCodeFormula = propertyFileRead(tukDiscountLineTotal);
 		
 		discTagsNC.add(tukDiscountLineTotal);
-		ncDisclist = IVTMultiTagCommonFunctionalities.getTagName(fileNC,discTagsNC);
-		discTagsAndValueNC = IVTSingleTagCompareFiles.convertList2Map(ncDisclist);
-		ncFinalDiscValue = Double.parseDouble(discTagsAndValueNC.get(tukDiscountLineTotal));
-
-		
+		ncDisclist = ivtMultiTagCommonFunction.getTagName(fileNC,discTagsNC);
+		if(!ncDisclist.isEmpty()) {
+		discTagsAndValueNC = ivtSingleTagFunction.convertList2Map(ncDisclist);
+		}
+		else
+		{
+			tukDiscountLineTotal = null;
+		}
+		try {
+			if(discTagsAndValueNC.get(tukDiscountLineTotal) != null && !(discTagsAndValueNC.get(tukDiscountLineTotal).isEmpty())) { 
+				ncFinalDiscValue = Double.parseDouble(discTagsAndValueNC.get(tukDiscountLineTotal));
+			}			
+		}
+		catch(Exception e) {
+			System.out.println("NC Tag Value is not Present for the Tag:"+tukDiscountLineTotal);
+		} 
+				
 		discTagsIBM.add(accDiscPeriodDiscount);
-		ibmDisclist = IVTMultiTagCommonFunctionalities.getTagName(fileIBM,discTagsIBM);
-		discTagsAndValueIBM = IVTSingleTagCompareFiles.convertList2Map(ibmDisclist);
+		ibmDisclist = ivtMultiTagCommonFunction.getTagName(fileIBM,discTagsIBM);
+		if(!ibmDisclist.isEmpty()) {
+		discTagsAndValueIBM = ivtSingleTagFunction.convertList2Map(ibmDisclist);
+		}
+		else
+		{
+			accDiscPeriodDiscount = null;
+		}
+		
 		ibmDiscValue = Double.parseDouble(discTagsAndValueIBM.get(accDiscPeriodDiscount));
-
-		accDiscTaxCodeList = IVTMultiTagCommonFunctionalities.fetchMultiOccurenceTag(fileIBM,accDiscTaxCode);
+		accDiscTaxCodeList = ivtMultiTagCommonFunction.fetchMultiOccurenceTag(fileIBM,accDiscTaxCode);
 		for (String s1 : accDiscTaxCodeList) {
-			taxTotalValue = IVTMultiTagCommonFunctionalities.convertString2Map(s1);
-			taxCode = (int)IVTMultiTagCommonFunctionalities.getOnlyValues(taxTotalValue, 2, ",", accDiscTaxCode);
-			actualCost = IVTMultiTagCommonFunctionalities.getOnlyValues(taxTotalValue, 6, ",", accDiscTaxCode);
-			discountAmt = IVTMultiTagCommonFunctionalities.getOnlyValues(taxTotalValue, 7, ",", accDiscTaxCode);
+			taxTotalValue = ivtMultiTagCommonFunction.convertString2Map(s1);
+			taxCode = (int)ivtMultiTagCommonFunction.getOnlyValues(taxTotalValue, 2, ",", accDiscTaxCode);
+			actualCost = ivtMultiTagCommonFunction.getOnlyValues(taxTotalValue, 6, ",", accDiscTaxCode);
+			discountAmt = ivtMultiTagCommonFunction.getOnlyValues(taxTotalValue, 7, ",", accDiscTaxCode);
 
 			switch(taxCode) {			
 			case 3008 :

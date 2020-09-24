@@ -13,12 +13,12 @@ import ivt.automation.core.IVTBase;
 
 public class IVTMultiTagCommonFunctionalities extends IVTBase {
 
-	public static BufferedReader br;
-	public static LinkedHashMap<String,String> tagNameAndValue = new LinkedHashMap<String,String>();
-	public static LinkedHashMap<String,String> extractedTagNameAndValue = new LinkedHashMap<String,String>();
-	public static String line = null;
+	public BufferedReader br;
+	public LinkedHashMap<String,String> tagNameAndValue = new LinkedHashMap<String,String>();
+	public LinkedHashMap<String,String> extractedTagNameAndValue = new LinkedHashMap<String,String>();
+	public String line = null;
 	
-	public static List<String> getTagName(String fileName,List<String> taglist) throws Exception, Exception {
+	public List<String> getTagName(String fileName,List<String> taglist) throws Exception, Exception {
 		List<String> tempAl = new ArrayList<>();
 		br = new BufferedReader(new FileReader(fileName));
 		while (((line = br.readLine()) != null)) {
@@ -35,7 +35,7 @@ public class IVTMultiTagCommonFunctionalities extends IVTBase {
 	}
 
 	//To calculate single tag single value sum
-	public static double sumOfTagValues(Map<String, String> tagNameAndValueNC) {
+	public double sumOfTagValues(Map<String, String> tagNameAndValueNC) {
 		double values = 0.0;
 		for(String v : tagNameAndValueNC.keySet()) {
 			values = values + Double.parseDouble(tagNameAndValueNC.get(v));
@@ -44,7 +44,7 @@ public class IVTMultiTagCommonFunctionalities extends IVTBase {
 	}
 	
 	//this is used to convert String to map with values having multiple value tags, we have to pass only String 
-	public static LinkedHashMap<String, String> convertString2Map(String str) {
+	public LinkedHashMap<String, String> convertString2Map(String str) {
 		LinkedHashMap<String, String> hm = new LinkedHashMap<>();
 		String key = StringUtils.substringBefore(str, " ");
 		String value = StringUtils.substringAfter(str, " ");
@@ -53,7 +53,7 @@ public class IVTMultiTagCommonFunctionalities extends IVTBase {
 	}
 	
 	//Convert String to Map, with delimiter replacement only for Single Tags.
-	public static LinkedHashMap<String,String> convertStr2MapWithDelim(String str) throws Exception {
+	public LinkedHashMap<String,String> convertStr2MapWithDelim(String str) throws Exception {
         LinkedHashMap<String,String> tempLHM = new LinkedHashMap<>();
         String key = StringUtils.substringBefore(str, " ");
 		String value = StringUtils.substringAfter(str, " ");
@@ -63,7 +63,7 @@ public class IVTMultiTagCommonFunctionalities extends IVTBase {
     }
 	
 	//Convert List to Maps, when we have multiple Values with comma or pipe as delimiter, When we Pass ArrayList
-	public static LinkedHashMap<String,String> convertList2MapMultiValues(List<String> list) throws Exception {
+	public LinkedHashMap<String,String> convertList2MapMultiValues(List<String> list) throws Exception {
         LinkedHashMap<String,String> tempLHM = new LinkedHashMap<>();
        for(String s : list){
             String key = StringUtils.substringBefore(s," ");
@@ -73,7 +73,7 @@ public class IVTMultiTagCommonFunctionalities extends IVTBase {
       return tempLHM;
     }
 
-	public static List<String> fetchMultiOccurenceTag(String fileName, String tagName) throws Exception{
+	public List<String> fetchMultiOccurenceTag(String fileName, String tagName) throws Exception{
 		br = new BufferedReader(new FileReader(fileName));
 		String line = null;
 		int itr = 1;
@@ -100,10 +100,10 @@ public class IVTMultiTagCommonFunctionalities extends IVTBase {
 		return multiOccurenceTagList;
 	}
 	
-	public static double getOnlyValues(LinkedHashMap<String, String> map, int position, String delimiter, String key) {
+	public double getOnlyValues(LinkedHashMap<String, String> map, int position, String delimiter, String key) {
 		double d = 0.0;
 		String st = map.get(key);
-		String arr[] = IVTBase.splitStringValue(st, delimiter);
+		String arr[] = splitStringValue(st, delimiter);
 		for(int i = 0; i<arr.length;i++) {
 			if(i==position) {
 				d = Double.parseDouble(arr[i]);

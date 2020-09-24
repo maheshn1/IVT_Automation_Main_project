@@ -8,9 +8,11 @@ import ivt.automation.core.IVTBase;
 
 public class Adj extends IVTBase{
 
-	public static String ibmNCAdj = "ADJ";
+	public String ibmNCAdj = "ADJ";
 
-	public static void CompareADJTags(String ibmFile, String ncFile) throws Exception {
+	public void CompareADJTags(String ibmFile, String ncFile) throws Exception {
+		
+		IVTMultiTagCommonFunctionalities ivtMultiTagCommonFunction = new IVTMultiTagCommonFunctionalities();
 		
 		LinkedHashMap<String,String> ibmMapvalue = new LinkedHashMap<>();
 		LinkedHashMap<String,String> ncMapValue = new LinkedHashMap<>();
@@ -25,14 +27,14 @@ public class Adj extends IVTBase{
 		ibmtags.add(ibmNCAdj);
 		nctags.add(ibmNCAdj);
 
-		ibmlist = IVTMultiTagCommonFunctionalities.getTagName(ibmFile,ibmtags);
-		ibmMapvalue = IVTMultiTagCommonFunctionalities.convertList2MapMultiValues(ibmlist);
+		ibmlist = ivtMultiTagCommonFunction.getTagName(ibmFile,ibmtags);
+		ibmMapvalue = ivtMultiTagCommonFunction.convertList2MapMultiValues(ibmlist);
 
-		nclist = IVTMultiTagCommonFunctionalities.getTagName(ncFile,nctags);
-		ncMapValue =  IVTMultiTagCommonFunctionalities.convertList2MapMultiValues(nclist);
+		nclist = ivtMultiTagCommonFunction.getTagName(ncFile,nctags);
+		ncMapValue =  ivtMultiTagCommonFunction.convertList2MapMultiValues(nclist);
 
-		ibmAdjValue = IVTMultiTagCommonFunctionalities.getOnlyValues(ibmMapvalue, 3, ",", ibmNCAdj);
-		ncAdjValue =  IVTMultiTagCommonFunctionalities.getOnlyValues(ncMapValue, 3, "\\|", ibmNCAdj);
+		ibmAdjValue = ivtMultiTagCommonFunction.getOnlyValues(ibmMapvalue, 3, ",", ibmNCAdj);
+		ncAdjValue =  ivtMultiTagCommonFunction.getOnlyValues(ncMapValue, 3, "\\|", ibmNCAdj);
 
 		if(ibmAdjValue!=ncAdjValue) {
 			if(ibmAdjValue > ncAdjValue) {

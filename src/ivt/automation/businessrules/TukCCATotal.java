@@ -9,25 +9,27 @@ import ivt.automation.report.IVTExcelReport;
 
 public class TukCCATotal extends IVTBase{
 
-	public static String invTotalRounded = "INVTOTALROUNDED";
-	public static String tuktCCATotal = "TUKTCCA_TOTAL";
+	public String invTotalRounded = "INVTOTALROUNDED";
+	public String tuktCCATotal = "TUKTCCA_TOTAL";
 	
-	public static int ACCOUNT_NUMBER = 0;
-	public static int CCA_NUMBER = 1;
-	public static int IBMTAG_NUMBER = 2;
-	public static int IBMVALUE_NUMBER = 3;
-	public static int NCTAG_NUMBER = 4;
-	public static int NCVALUE_NUMBER = 5;
-	public static int DIFFERENCE_NUMBER = 6;
-	public static int FLAG_NUMBER = 7;
+	public int ACCOUNT_NUMBER = 0;
+	public int CCA_NUMBER = 1;
+	public int IBMTAG_NUMBER = 2;
+	public int IBMVALUE_NUMBER = 3;
+	public int NCTAG_NUMBER = 4;
+	public int NCVALUE_NUMBER = 5;
+	public int DIFFERENCE_NUMBER = 6;
+	public int FLAG_NUMBER = 7;
 		
-	public static int IBMValue_rowCCA = 1;
-	public static int NCValue_rowCCA = 1;
-	public static int flag_rowCCA = 1;
+	public int IBMValue_rowCCA = 1;
+	public int NCValue_rowCCA = 1;
+	public int flag_rowCCA = 1;
 
-
-	public static void compareTukCCATotal(String ccaIbmFile, String ncFile) throws Exception {
-
+	IVTMultiTagCommonFunctionalities ivtMultiTagCommonFunction = new IVTMultiTagCommonFunctionalities();
+	IVTSingleTagCompareFiles ivtSingleTagFunction = new IVTSingleTagCompareFiles();
+	
+	public void compareTukCCATotalSingleFile(String ccaIbmFile, String ncFile) throws Exception {
+				
 		LinkedHashMap<String,String> ccaibmMapvalue = new LinkedHashMap<>();
 		LinkedHashMap<String,String> ncMapValue = new LinkedHashMap<>();
 		List<String> ccaibmlist = new ArrayList<>();
@@ -40,21 +42,40 @@ public class TukCCATotal extends IVTBase{
 		
 		String b[] = ccaIbmFile.split("\\\\");
 		int len = b.length;
-		IVTBase.CCAFILENAME = b[len-1];
-		System.out.println(IVTBase.CCAFILENAME);		
+		CCAFILENAME = b[len-1];
+		System.out.println(CCAFILENAME);		
 		
 		ccaIbmtags.add(invTotalRounded);
 		nctags.add(tuktCCATotal);
 
-		ccaibmlist = IVTMultiTagCommonFunctionalities.getTagName(ccaIbmFile,ccaIbmtags);
-		ccaibmMapvalue = IVTSingleTagCompareFiles.convertList2Map(ccaibmlist);
-
-		nclist = IVTMultiTagCommonFunctionalities.getTagName(ncFile,nctags);
-		ncMapValue = IVTSingleTagCompareFiles.convertList2Map(nclist);
-
+		ccaibmlist = ivtMultiTagCommonFunction.getTagName(ccaIbmFile,ccaIbmtags);
+		if(!(ccaibmlist.isEmpty())){
+		ccaibmMapvalue = ivtSingleTagFunction.convertList2Map(ccaibmlist);
+		}else
+		{
+			invTotalRounded = null;
+		}
+		try {
+			if(ccaibmMapvalue.get(invTotalRounded) != null  && !(ccaibmMapvalue.get(invTotalRounded)).isEmpty()) {
 		IbmCCATotalValue = Double.parseDouble(ccaibmMapvalue.get(invTotalRounded));
+		}
+		}
+		catch(Exception e) {
+			System.out.println("IBM Tag Value is Missing for the Tag:"+invTotalRounded);
+		}
+		nclist = ivtMultiTagCommonFunction.getTagName(ncFile,nctags);
+		if(!nclist.isEmpty()) {
+			ncMapValue = ivtSingleTagFunction.convertList2Map(nclist);
+		}		
+		try {
+			if(ncMapValue.get(tuktCCATotal) != null && ncMapValue.get(tuktCCATotal).isEmpty()) {
 		ncCCATotalValue = Double.parseDouble(ncMapValue.get(tuktCCATotal));
-
+			}
+		}
+		catch(Exception e) {
+			System.out.println("NC Tag VAlue is Missing for the Tag:"+tuktCCATotal);
+		}
+		
 		if(IbmCCATotalValue!=ncCCATotalValue) {
 			if(IbmCCATotalValue > ncCCATotalValue) {
 				diff = IbmCCATotalValue - ncCCATotalValue;				
@@ -87,7 +108,7 @@ public class TukCCATotal extends IVTBase{
 
 	}
 
-	public static void compareTukCCAListTotal(List<String> ccaList, String ncFile) throws Exception {
+	public void compareTukCCATotalMultiFile(List<String> ccaList, String ncFile) throws Exception {
 
 		List<String> ccaibmlist = new ArrayList<>();
 		List<String> nclist = new ArrayList<>();
@@ -107,19 +128,37 @@ public class TukCCATotal extends IVTBase{
 		for(String ccafile : ccaList) {
 			String c[] = ccafile.split("\\\\");
 			int len = c.length;
-			IVTBase.CCAFILENAME = c[len-1];			
-			ccaFilesNames= ccaFilesNames + IVTBase.CCAFILENAME+ " | ";
+			CCAFILENAME = c[len-1];			
+			ccaFilesNames= ccaFilesNames + CCAFILENAME+ " | ";
 			
-			ccaibmlist = IVTMultiTagCommonFunctionalities.getTagName(ccafile,ccaIbmtags);
-			ccaibmMapvalue = IVTSingleTagCompareFiles.convertList2Map(ccaibmlist);
+			ccaibmlist = ivtMultiTagCommonFunction.getTagName(ccafile,ccaIbmtags);
+			if(!ccaibmlist.isEmpty()) {
+			ccaibmMapvalue = ivtSingleTagFunction.convertList2Map(ccaibmlist);
+			}
+			try {
+				if(ccaibmMapvalue.get(invTotalRounded) != null && !(ccaibmMapvalue.get(invTotalRounded).isEmpty())) {
 			IbmCCATotalValue = Double.parseDouble(ccaibmMapvalue.get(invTotalRounded));
-			ccaIbmFinalValue = ccaIbmFinalValue + IbmCCATotalValue;
+			}
+				ccaIbmFinalValue = ccaIbmFinalValue + IbmCCATotalValue;
+			}
+			catch(Exception e) {
+				System.out.println("IBM TAG Value is Missing for the Tag: "+invTotalRounded);
+			}
 		}
 		
-		nclist = IVTMultiTagCommonFunctionalities.getTagName(ncFile,nctags);
-		ncMapValue = IVTSingleTagCompareFiles.convertList2Map(nclist);			
+		nclist = ivtMultiTagCommonFunction.getTagName(ncFile,nctags);
+		if(!nclist.isEmpty()) {
+			ncMapValue = ivtSingleTagFunction.convertList2Map(nclist);
+		}		
+		try {
+			if(ncMapValue.get(tuktCCATotal) != null && !(ncMapValue.get(tuktCCATotal).isEmpty())) {
 		ncCCATotalValue = Double.parseDouble(ncMapValue.get(tuktCCATotal));
-
+			}
+		}
+		catch(Exception e) {
+			System.out.println("NC Tag VAlue is Missing for the Tag:"+tuktCCATotal);
+		}
+		
 		if(ccaIbmFinalValue!=ncCCATotalValue) {
 			
 			if(IbmCCATotalValue > ncCCATotalValue) {

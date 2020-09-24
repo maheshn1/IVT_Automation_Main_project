@@ -15,7 +15,7 @@ public class IVTBase {
 	//End Tag List
 	//checking change
 	//Extract Tag Name
-	public static int ACCOUNT_NUMBER = 0;	
+	public static int ACCOUNT_NUMBER = 0;
 	public static int IBMTAG_NUMBER = 1;
 	public static int IBMVALUE_NUMBER = 2;
 	public static int NCTAG_NUMBER = 3;
@@ -31,37 +31,38 @@ public class IVTBase {
 	public static String CCAFILENAME = null;
 	public static String sheetName = "IBM_NC_AllTags";
 
-
 	public static List<String> ibmAndNCFiles = new ArrayList<>();
 	public static List<String> ccaAndNCFiles = new ArrayList<>();
 	public static String propFile = "C:\\Users\\204747\\IVT_WorkSpace\\IVT_Automation_Main_project\\ivtAuto.properties";
 	public static Properties prop = new Properties();
-
+	
+	public static Files files = new Files();
+		
 	public static List<String> fetchIBMAndNCFiles() throws Exception {
 		IVTExcelReport.createExcelSheet();
-		ibmAndNCFiles = Files.searchIBMFileForNCFile();	
+		ibmAndNCFiles = files.searchIBMFileForNCFile();	
 		return ibmAndNCFiles;
 	}
 
 	public static List<String> fetchCCAAndNCFiles() throws Exception {
 		IVTExcelReport.createCCAExcelSheet();
-		ccaAndNCFiles = Files.searchCCAFileForNCFile();
+		ccaAndNCFiles = files.searchCCAFileForNCFile();
 		return ccaAndNCFiles;
 	}
 
-	public static String propertyFileRead(String propFileName) throws Exception {
+	public String propertyFileRead(String propFileName) throws Exception {
 		FileReader fr = new FileReader(propFile);
 		prop.load(fr);
 		return prop.getProperty(propFileName);
 	}
 
-	public static String[] splitStringValue(String Value, String delimiter) {
+	public String[] splitStringValue(String Value, String delimiter) {
 		String newVal[] = Value.split(delimiter);	
 		return newVal;
 	}
 
 	public static void printUnMatchedReportInExcelSheet(String ibmTag, String ibmValue, String ncTag, String ncValue, String difference) throws Exception 
-	{
+	{		
 		IVTExcelReport.setCellValues(sheetName, IBMValue_row, ACCOUNT_NUMBER, ACCOUNTNUMBER);
 		IVTExcelReport.setCellValues(sheetName, IBMValue_row, IBMTAG_NUMBER, ibmTag);
 		IVTExcelReport.setCellValues(sheetName, IBMValue_row++, IBMVALUE_NUMBER, ibmValue);
@@ -72,7 +73,7 @@ public class IVTBase {
 	}
 	
 	public static void printMatchedReportInExcelSheet(String ibmTag, String ibmValue, String ncTag, String ncValue, String difference) throws Exception 
-	{
+	{		
 		IVTExcelReport.setCellValues(sheetName, IBMValue_row, ACCOUNT_NUMBER, ACCOUNTNUMBER);
 		IVTExcelReport.setCellValues(sheetName, IBMValue_row, IBMTAG_NUMBER, ibmTag);
 		IVTExcelReport.setCellValues(sheetName, IBMValue_row++, IBMVALUE_NUMBER, ibmValue);
@@ -81,6 +82,4 @@ public class IVTBase {
 		IVTExcelReport.setCellValues(sheetName, NCValue_row++, DIFFERENCE_NUMBER, difference);
 		IVTExcelReport.setCellValues(sheetName, flag_row++, FLAG_NUMBER, "YES");
 	}
-
-
 }

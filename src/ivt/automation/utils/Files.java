@@ -12,7 +12,7 @@ import ivt.automation.core.IVTBase;
 
 public class Files extends IVTBase{
 
-	public static File directoryPath_ivt;
+	public File directoryPath_ivt;
 	
 	//All File Operations , To move different folders
 	//Read IBM and NC Paths (from folders)
@@ -20,7 +20,7 @@ public class Files extends IVTBase{
 	//Missing Files from both the folder
 	//To get the occurrence of tagNames  --(Ex: to get the total boltons as arrayList and extracting only those values and sum it up)
 
-	public static List<String> fetchFileFromivtDataFilesFolder(String FileNameBeginsWith) throws Exception {
+	public List<String> fetchFileFromivtDataFilesFolder(String FileNameBeginsWith) throws Exception {
 		directoryPath_ivt = new File(propertyFileRead("IVT_Folder"));
 		List<String> ivtFilesPath = new ArrayList<>();
 		File ivtDataFiles_List[] = directoryPath_ivt.listFiles();
@@ -43,7 +43,7 @@ public class Files extends IVTBase{
 		return ivtFilesPath;
 	}
 
-	public static List<String> searchIBMFileForNCFile() throws Exception
+	public List<String> searchIBMFileForNCFile() throws Exception
 	{
 		List<String> NCFilesPath = new  ArrayList<String>();
 		List<String> IBMFilesPath = new  ArrayList<String>();
@@ -52,7 +52,7 @@ public class Files extends IVTBase{
 		NCFilesPath = fetchFileFromivtDataFilesFolder("NC");                             
 		IBMFilesPath = fetchFileFromivtDataFilesFolder("IBM");
 
-		String ivtFilePath=IVTBase.propertyFileRead("IVT_Folder");
+		String ivtFilePath=propertyFileRead("IVT_Folder");
 		String ibmAcNo="",ncAcNo="";
 
 		for(String ncFile : NCFilesPath) {
@@ -73,9 +73,9 @@ public class Files extends IVTBase{
 		return IBMAndNCFiles;
 	}
 
-	public static List<String> searchCCAFileForNCFile() throws Exception
+	public List<String> searchCCAFileForNCFile() throws Exception
 	{
-		String ivtFilePath=IVTBase.propertyFileRead("IVT_Folder");
+		String ivtFilePath=propertyFileRead("IVT_Folder");
 		List<String> NCFilesPath = new  ArrayList<String>();
 		List<String> CCAFilesPath = new  ArrayList<String>();
 		List<String> CCAAndNCFiles = new ArrayList<>();

@@ -15,13 +15,13 @@ import ivt.automation.utils.XlsxFile;
 //Comparing method
 //in general, we have to compare around 10k GMF files. hence values for file names and total number of GMF files should be input/fetched from Files.Java.
 public class IVTSingleTagCompareFiles extends IVTBase {
+	
+	public String line = null;
+	public List<String> singleTagsList = new ArrayList<String>();
+	public LinkedHashMap<String,String> tagNameAndValueIBM = new LinkedHashMap<String,String>();
+	public LinkedHashMap<String,String> tagNameAndValueNC = new LinkedHashMap<String,String>();
 
-	public static String line = null;
-	public static List<String> singleTagsList = new ArrayList<String>();
-	public static LinkedHashMap<String,String> tagNameAndValueIBM = new LinkedHashMap<String,String>();
-	public static LinkedHashMap<String,String> tagNameAndValueNC = new LinkedHashMap<String,String>();
-
-	public static List<String> getIBMNCTagNames(String fileName) throws Exception, Exception {
+	public List<String> getIBMNCTagNames(String fileName) throws Exception, Exception {
 		List<String> tempal = new ArrayList<>();
 		BufferedReader br = new BufferedReader(new FileReader(fileName));
 		while (((line = br.readLine()) != null)) {
@@ -38,7 +38,7 @@ public class IVTSingleTagCompareFiles extends IVTBase {
 	}	
 
 	//Converts List to Map for single tag values which needs delimiter replacement
-	public static LinkedHashMap<String,String> convertList2Map(List<String> list) throws Exception {
+	public LinkedHashMap<String,String> convertList2Map(List<String> list) throws Exception {
 		LinkedHashMap<String,String> tempLHM = new LinkedHashMap<>();
 		for(String s : list){
 			String key = StringUtils.substringBefore(s," ");
@@ -49,7 +49,8 @@ public class IVTSingleTagCompareFiles extends IVTBase {
 		return tempLHM;
 	}
 
-	public static void compareIBMAndNCSingleTags(String fileIBM, String fileNC) throws Exception {
+	public void compareIBMAndNCSingleTags(String fileIBM, String fileNC) throws Exception {
+		XlsxFile xlsxfile = new XlsxFile();
 		//try {
 		List<String> ibmlist = new ArrayList<>();		
 		List<String> nclist = new ArrayList<>();
@@ -57,7 +58,7 @@ public class IVTSingleTagCompareFiles extends IVTBase {
 		double ncDoubleValue =0.0;
 		double diff =0.0;
 
-		singleTagsList = XlsxFile.fetchTagNames(IVTBase.propertyFileRead("IBMNCTAG"),IVTBase.propertyFileRead("NC_IBM_Maps"));
+		singleTagsList = xlsxfile.fetchTagNames(propertyFileRead("IBMNCTAG"),propertyFileRead("NC_IBM_Maps"));
 
 		tagNameAndValueIBM.clear();		
 		ibmlist = getIBMNCTagNames(fileIBM);

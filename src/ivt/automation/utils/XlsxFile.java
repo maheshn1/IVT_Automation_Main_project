@@ -12,15 +12,15 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class XlsxFile {
 
-	static String mapDocPath = null;
-	static XSSFWorkbook workbook;
-	static XSSFSheet sheet;
-	static XSSFRow row;
-	static XSSFCell cell;
-	static List<String> allSingleTags = new ArrayList<>();
+	String mapDocPath = null;
+	XSSFWorkbook workbook;
+	XSSFSheet sheet;
+	XSSFRow row;
+	XSSFCell cell;
+	List<String> allSingleTags = new ArrayList<>();
 
-	public static List<String> fetchTagNames(String sheetname,String mapDocPath) throws Exception {
-
+	public List<String> fetchTagNames(String sheetname,String mapDocPath) throws Exception {
+		
 		FileInputStream fis = new FileInputStream(new File(mapDocPath));
 		workbook = new XSSFWorkbook(fis);
 		sheet = workbook.getSheet(sheetname);

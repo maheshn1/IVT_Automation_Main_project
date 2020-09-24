@@ -29,10 +29,10 @@ public class IVTExcelReport {
 	public static XSSFRow row = null;
 	public static XSSFCell cell = null;
 
-	static DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy_HH-mm-ss");
-	static Date date = new Date();
-	static String filePathdate = dateFormat.format(date).toString();
-	static File file = new File(".//ExcelReport//"+filePathdate+"_IVT.xlsx");
+	public static DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy_HH-mm-ss");
+	public static Date date = new Date();
+	public static String filePathdate = dateFormat.format(date).toString();
+	public static File file = new File(".//ExcelReport//"+filePathdate+"_IVT.xlsx");
 
 	public static void createExcelSheet() throws Exception {
 

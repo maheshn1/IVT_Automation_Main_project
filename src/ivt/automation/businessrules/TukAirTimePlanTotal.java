@@ -8,10 +8,14 @@ import ivt.automation.core.IVTBase;
 
 public class TukAirTimePlanTotal extends IVTBase {
 
-	public static String o2ProdLRTot = "O2PRODLRTOT";
-	public static String tukAirTimePlanTotal = "SUBS";	
+	public String o2ProdLRTot = "O2PRODLRTOT";
+	public String tukAirTimePlanTotal = "SUBS";	
 
-	public static void compareAirTimePlanTotal(String ibmFile, String ncFile) throws Exception {
+	public void compareAirTimePlanTotal(String ibmFile, String ncFile) throws Exception {
+		
+		IVTMultiTagCommonFunctionalities ivtMultiTagCommonFunction = new IVTMultiTagCommonFunctionalities();
+		IVTSingleTagCompareFiles ivtSingleTagFunction = new IVTSingleTagCompareFiles();
+		OTCCommonTagsFunctionality otcCommonFunction = new OTCCommonTagsFunctionality();
 
 		List<String> ibmlist = new ArrayList<>();
 		List<String> ncSubslist = new ArrayList<>();
@@ -26,9 +30,9 @@ public class TukAirTimePlanTotal extends IVTBase {
 
 		ibmtags.add(o2ProdLRTot);
 
-		ibmlist = IVTMultiTagCommonFunctionalities.getTagName(ibmFile,ibmtags);
+		ibmlist = ivtMultiTagCommonFunction.getTagName(ibmFile,ibmtags);
 		if(!(ibmlist.isEmpty())){
-			ibmMapvalue = IVTSingleTagCompareFiles.convertList2Map(ibmlist);
+			ibmMapvalue = ivtSingleTagFunction.convertList2Map(ibmlist);
 		}	
 		else {
 			o2ProdLRTot = null;
@@ -41,14 +45,14 @@ public class TukAirTimePlanTotal extends IVTBase {
 		catch(Exception e) {
 			System.out.println("IBM Tag Value is not Present");
 		} 
-		System.out.println(ibmAirTimeTotalValue);
-		ncSubslist = IVTMultiTagCommonFunctionalities.fetchMultiOccurenceTag(ncFile,tukAirTimePlanTotal);
+		
+		ncSubslist = ivtMultiTagCommonFunction.fetchMultiOccurenceTag(ncFile,tukAirTimePlanTotal);
 		if(!(ncSubslist.isEmpty())){
 			for (String s1 : ncSubslist) {
-				subsValue = IVTMultiTagCommonFunctionalities.convertString2Map(s1);
-				ncSubsCharge = IVTMultiTagCommonFunctionalities.getOnlyValues(subsValue, 3, "\\|", tukAirTimePlanTotal);
-				ncSubsTaxCode = (int)IVTMultiTagCommonFunctionalities.getOnlyValues(subsValue, 6, "\\|", tukAirTimePlanTotal);
-				ncAirTimeValue= ncAirTimeValue + OTCCommonTagsFunctionality.taxCodeCalculation(ncSubsCharge, ncSubsTaxCode);			
+				subsValue = ivtMultiTagCommonFunction.convertString2Map(s1);
+				ncSubsCharge = ivtMultiTagCommonFunction.getOnlyValues(subsValue, 3, "\\|", tukAirTimePlanTotal);
+				ncSubsTaxCode = (int)ivtMultiTagCommonFunction.getOnlyValues(subsValue, 6, "\\|", tukAirTimePlanTotal);
+				ncAirTimeValue= ncAirTimeValue + otcCommonFunction.taxCodeCalculation(ncSubsCharge, ncSubsTaxCode);			
 				subsValue.clear();
 			}
 		}
