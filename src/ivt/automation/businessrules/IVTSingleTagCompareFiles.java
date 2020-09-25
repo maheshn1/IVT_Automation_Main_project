@@ -15,7 +15,7 @@ import ivt.automation.utils.XlsxFile;
 //Comparing method
 //in general, we have to compare around 10k GMF files. hence values for file names and total number of GMF files should be input/fetched from Files.Java.
 public class IVTSingleTagCompareFiles extends IVTBase {
-	
+
 	public String line = null;
 	public List<String> singleTagsList = new ArrayList<String>();
 	public LinkedHashMap<String,String> tagNameAndValueIBM = new LinkedHashMap<String,String>();
@@ -68,15 +68,16 @@ public class IVTSingleTagCompareFiles extends IVTBase {
 		nclist = getIBMNCTagNames(fileNC);
 		tagNameAndValueNC = convertList2Map(nclist);
 
+		String IBMValue="";
+		String NCValue = "";
+
 		for (String tag : singleTagsList) {
-			String IBMValue = tagNameAndValueIBM.get(tag);
-			String NCValue = tagNameAndValueNC.get(tag);
+			if(!(tag.equalsIgnoreCase("ACCOUNTNO") || tag.equalsIgnoreCase("BILLDATE") || tag.equalsIgnoreCase("PAYMENTDUEDATE") 
+					|| tag.equalsIgnoreCase("INVOICESTART") || tag.equalsIgnoreCase("INVOICEEND"))) {
+				IBMValue = tagNameAndValueIBM.get(tag);
+				NCValue = tagNameAndValueNC.get(tag);
 
-			if (!IBMValue.equalsIgnoreCase(NCValue)) {
-
-				if(!(tag.equalsIgnoreCase("ACCOUNTNO") || tag.equalsIgnoreCase("BILLDATE") || tag.equalsIgnoreCase("PAYMENTDUEDATE") 
-						|| tag.equalsIgnoreCase("INVOICESTART") || tag.equalsIgnoreCase("INVOICEEND"))) {
-					
+				if (!IBMValue.equalsIgnoreCase(NCValue)) {
 					ibmDoubleValue = Double.parseDouble(IBMValue);
 					ncDoubleValue = Double.parseDouble(NCValue);
 
@@ -86,19 +87,35 @@ public class IVTSingleTagCompareFiles extends IVTBase {
 					else {
 						diff = ncDoubleValue - ibmDoubleValue;
 					}
+					System.out.println("Account Number " + ACCOUNTNUMBER + "::Tag:" + tag + " IBM Value:: " + IBMValue
+							+ " NC Value:: " + NCValue);
+					printUnMatchedReportInExcelSheet(tag, IBMValue, tag, NCValue, Double.toString(diff));
+					diff = 0.0;
 				}
-				System.out.println("Account Number " + ACCOUNTNUMBER + "::Tag:" + tag + " IBM Value:: " + IBMValue
-						+ " NC Value:: " + NCValue);
-				printUnMatchedReportInExcelSheet(tag, IBMValue, tag, NCValue, Double.toString(diff));
-				diff = 0.0;
-
-			} else {
-				//	 System.out.println("Account Number "+ ACCOUNTNUMBER+"::Tag:"+tag+" IBM Value::"
-				//		 +IBMValue+ " NC Value:: "+NCValue);
-				diff = 0.0;
-				printMatchedReportInExcelSheet(tag, IBMValue, tag, NCValue, Double.toString(diff));
+				else{
+					//	 System.out.println("Account Number "+ ACCOUNTNUMBER+"::Tag:"+tag+" IBM Value::"
+					//		 +IBMValue+ " NC Value:: "+NCValue);
+					diff = 0.0;
+					printMatchedReportInExcelSheet(tag, IBMValue, tag, NCValue, Double.toString(diff));
+				}
 			}
-
+			else if((tag.equalsIgnoreCase("ACCOUNTNO") || tag.equalsIgnoreCase("BILLDATE") || tag.equalsIgnoreCase("PAYMENTDUEDATE") 
+					|| tag.equalsIgnoreCase("INVOICESTART") || tag.equalsIgnoreCase("INVOICEEND"))) {
+				IBMValue = tagNameAndValueIBM.get(tag);
+				NCValue = tagNameAndValueNC.get(tag);
+				if (!IBMValue.equalsIgnoreCase(NCValue)) {
+					ibmDoubleValue = Double.parseDouble(IBMValue);
+					ncDoubleValue = Double.parseDouble(NCValue);
+					System.out.println("Account Number " + ACCOUNTNUMBER + "::Tag:" + tag + " IBM Value:: " + IBMValue
+							+ " NC Value:: " + NCValue);
+					printUnMatchedReportInExcelSheet(tag, IBMValue, tag, NCValue, "NA");
+				}
+				else{
+					//	 System.out.println("Account Number "+ ACCOUNTNUMBER+"::Tag:"+tag+" IBM Value::"
+					//		 +IBMValue+ " NC Value:: "+NCValue);
+					printMatchedReportInExcelSheet(tag, IBMValue, tag, NCValue, "NA");
+				}
+			}
 		}
 		singleTagsList.clear();
 		//} 

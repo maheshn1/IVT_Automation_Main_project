@@ -37,11 +37,11 @@ public class IVTMainTest extends IVTBase{
 			System.out.println(ACCOUNTNUMBER);
 			
 			ivtSingleFile.compareIBMAndNCSingleTags(IBM,NC);
-			adj.CompareADJTags(IBM,NC);
-			tukPaperFee.compareTukPaperFee(IBM, NC);
-			tukCurrentSpendCap.compareSpendCap(IBM, NC);
-			airTime.compareAirTimePlanTotal(IBM,NC);
-			tukDiscountLine.compareDiscountLineTotal(IBM,NC);
+//			adj.CompareADJTags(IBM,NC);
+//			tukPaperFee.compareTukPaperFee(IBM, NC);
+//			tukCurrentSpendCap.compareSpendCap(IBM, NC);
+//			airTime.compareAirTimePlanTotal(IBM,NC);
+//			tukDiscountLine.compareDiscountLineTotal(IBM,NC);
 		}
 		
 		for (String str : fetchCCAAndNCFiles()) {
@@ -57,13 +57,13 @@ public class IVTMainTest extends IVTBase{
 			
 			if(a.length==2) {
 				CCA = a[1];
-				tukCCA.compareTukCCATotalSingleFile(CCA,NC);	
+			//	tukCCA.compareTukCCATotalSingleFile(CCA,NC);	
 			}
 			else {
 				for(int i=1;i<a.length;i++) {
 					ccalist.add(a[i]);
 				}
-				tukCCA.compareTukCCATotalMultiFile(ccalist, NC);
+				//tukCCA.compareTukCCATotalMultiFile(ccalist, NC);
 			}
 		}
 	}
