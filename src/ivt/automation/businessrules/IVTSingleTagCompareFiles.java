@@ -27,7 +27,7 @@ public class IVTSingleTagCompareFiles extends IVTBase {
 		while (((line = br.readLine()) != null)) {
 			int count = singleTagsList.size();
 			for (int i = 0; i < count; i++) {
-				if (line.startsWith(singleTagsList.get(i))) {
+				if (line.startsWith(singleTagsList.get(i).toLowerCase()) || line.startsWith(singleTagsList.get(i).toUpperCase())) {
 					tempal.add(line);
 					break;
 				}
@@ -44,7 +44,7 @@ public class IVTSingleTagCompareFiles extends IVTBase {
 			String key = StringUtils.substringBefore(s," ");
 			String val = StringUtils.substringAfter(s," ");
 			String Value = val.replaceAll("\\|", "");
-			tempLHM.put(key,Value);
+			tempLHM.put(key.toUpperCase(),Value);
 		}
 		return tempLHM;
 	}

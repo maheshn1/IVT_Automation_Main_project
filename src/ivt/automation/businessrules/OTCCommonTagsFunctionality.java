@@ -24,12 +24,13 @@ public class OTCCommonTagsFunctionality extends IVTBase{
 		Double finalOtcPrice=0.0;
 		int itr = 1;
 		int x=0,y = 0, taxVal=0; 
+		String otc = "OTC", otcPrice = "OTCPRICE", otcTax="OTCTAXCODE";
 
 		while((line = br1.readLine()) != null ) {
 			map.put(itr++,line );
 		}
 		for(int i : map.keySet()) {
-			if(map.get(i).contains("OTC")) {
+			if(map.get(i).contains(otc.toLowerCase()) || map.get(i).contains(otc.toUpperCase())) {
 				map1.put(i, map.get(i));
 			}	
 		}
@@ -49,21 +50,21 @@ public class OTCCommonTagsFunctionality extends IVTBase{
 			for(int a = 0; a<bEndOtcLineNoList.size();a++) {
 
 				if(i>bStartOtcLineNoList.get(a) && i< bEndOtcLineNoList.get(a)) {
-					if((map1.get(i).contains(OTCName)) && (map1.get(i).contains(wildCardSearch)) ) {
+					if((map1.get(i).contains(OTCName.toLowerCase()) || map1.get(i).contains(OTCName.toUpperCase())) && (map1.get(i).contains(wildCardSearch)))  {
 						x= bStartOtcLineNoList.get(a);
 						y = bEndOtcLineNoList.get(a);								
 					}
 
 					if(i>x && i<y) {
-						if(map1.get(i).contains("OTCPRICE")) {
+						if(map1.get(i).contains(otcPrice.toLowerCase()) || map1.get(i).contains(otcPrice.toUpperCase())) {
 							String priceDem=map1.get(i);
-							priceVal=Double.parseDouble(ivtMultiTagCommonFunction.convertStr2MapWithDelim(priceDem).get("OTCPRICE"));
+							priceVal=Double.parseDouble(ivtMultiTagCommonFunction.convertStr2MapWithDelim(priceDem).get(otcPrice.toUpperCase()));
 							break;
 						}
 
-						if(map1.get(i).contains("OTCTAXCODE")) {
+						if(map1.get(i).contains(otcTax.toLowerCase()) || map1.get(i).contains(otcTax.toUpperCase())) {
 							String taxDem=map1.get(i);
-							taxVal=Integer.parseInt(ivtMultiTagCommonFunction.convertStr2MapWithDelim(taxDem).get("OTCTAXCODE"));
+							taxVal=Integer.parseInt(ivtMultiTagCommonFunction.convertStr2MapWithDelim(taxDem).get(otcTax.toUpperCase()));
 							finalOtcPrice= finalOtcPrice + taxCodeCalculation(priceVal, taxVal);
 						}
 						break;

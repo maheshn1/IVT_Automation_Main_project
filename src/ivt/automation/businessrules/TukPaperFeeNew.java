@@ -12,9 +12,9 @@ public class TukPaperFeeNew extends IVTBase{
 	public String o2ProdBotTot="O2PRODBOTOT";
 	public String tukPaperFee="Paper Bill Charge Type",tukMonthlyExtra_Total="SAPROD";	
 	public String tukPaperFeeFormula = null;
-	
+
 	public void compareTukPaperFee(String fileIBM, String fileNC) throws Exception {
-		
+
 		IVTMultiTagCommonFunctionalities ivtMultiTagCommonFunction = new IVTMultiTagCommonFunctionalities();
 		IVTSingleTagCompareFiles ivtSingleTagFunction = new IVTSingleTagCompareFiles();
 		OTCCommonTagsFunctionality otcCommonFunction = new OTCCommonTagsFunctionality();
@@ -34,11 +34,11 @@ public class TukPaperFeeNew extends IVTBase{
 		int nctukMonthlyExtraTaxCode = 0;
 
 		tukPaperFeeFormula = propertyFileRead(o2ProdBotTot);
-		
+
 		tagsIBM.add(o2ProdBotTot);
 		ibmlist = ivtMultiTagCommonFunction.getTagName(fileIBM,tagsIBM);
 		if(!(ibmlist.isEmpty())) {
-		tagNameAndValueIBM = ivtSingleTagFunction.convertList2Map(ibmlist);
+			tagNameAndValueIBM = ivtSingleTagFunction.convertList2Map(ibmlist);
 		}
 		else {
 			o2ProdBotTot = null;
@@ -50,23 +50,30 @@ public class TukPaperFeeNew extends IVTBase{
 		}
 		catch(Exception e) {
 			System.out.println("IBM Tag Value is not Present");
-		} 
-	
-		ncTukPaperFee = otcCommonFunction.fetchOTCPriceTags(fileNC,"OTCTYPENAME",tukPaperFee);
-				
-		ncSaProdlist = ivtMultiTagCommonFunction.fetchMultiOccurenceTag(fileNC,tukMonthlyExtra_Total);
-		for (String s1 : ncSaProdlist) {
-			SaProdValue = ivtMultiTagCommonFunction.convertString2Map(s1);
-			nctukMonthlyExtraCharge = ivtMultiTagCommonFunction.getOnlyValues(SaProdValue, 3, "\\|", tukMonthlyExtra_Total);
-			nctukMonthlyExtraTaxCode = (int)ivtMultiTagCommonFunction.getOnlyValues(SaProdValue, 6, "\\|", tukMonthlyExtra_Total);
-			saProdFinalValue= saProdFinalValue + otcCommonFunction.taxCodeCalculation(nctukMonthlyExtraCharge, nctukMonthlyExtraTaxCode);			
-			SaProdValue.clear();
 		}
+		ncTukPaperFee = otcCommonFunction.fetchOTCPriceTags(fileNC,"OTCTYPENAME",tukPaperFee);
 
 		otcPriceSum = otcCommonFunction.fetchOTCPriceTags(fileNC,"OTCNAME","Bolt On");
-		
-		ncValue = ncTukPaperFee + saProdFinalValue + otcPriceSum;
 
+		ncSaProdlist = ivtMultiTagCommonFunction.fetchMultiOccurenceTag(fileNC,tukMonthlyExtra_Total);		
+		if(!(ncSaProdlist.isEmpty())) {
+			for (String s1 : ncSaProdlist) {
+				SaProdValue = ivtMultiTagCommonFunction.convertString2Map(s1);
+				nctukMonthlyExtraCharge = ivtMultiTagCommonFunction.getOnlyValues(SaProdValue, 3, "\\|", tukMonthlyExtra_Total);
+				nctukMonthlyExtraTaxCode = (int)ivtMultiTagCommonFunction.getOnlyValues(SaProdValue, 6, "\\|", tukMonthlyExtra_Total);
+				saProdFinalValue= saProdFinalValue + otcCommonFunction.taxCodeCalculation(nctukMonthlyExtraCharge, nctukMonthlyExtraTaxCode);			
+				SaProdValue.clear();
+			}
+		}
+
+		try {
+			if(Double.toString(ncTukPaperFee) != null && Double.toString(saProdFinalValue) != null && Double.toString(otcPriceSum) != null) { 
+				ncValue = ncTukPaperFee + saProdFinalValue + otcPriceSum;
+			}			
+		}
+		catch(Exception e) {
+			System.out.println("NC Tag Value is not Present");
+		}
 		if(ibmValue != ncValue){
 			if(ibmValue > ncValue) {
 				diff = ibmValue - ncValue;				

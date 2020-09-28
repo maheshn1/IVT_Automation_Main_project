@@ -24,7 +24,7 @@ public class IVTMultiTagCommonFunctionalities extends IVTBase {
 		while (((line = br.readLine()) != null)) {
 			int count = taglist.size();
 			for (int i = 0; i < count; i++) {
-				if (line.startsWith(taglist.get(i))) {
+				if (line.startsWith(taglist.get(i).toLowerCase()) || line.startsWith(taglist.get(i).toUpperCase())) {
 					tempAl.add(line);
 					break;
 				}
@@ -47,8 +47,8 @@ public class IVTMultiTagCommonFunctionalities extends IVTBase {
 	public LinkedHashMap<String, String> convertString2Map(String str) {
 		LinkedHashMap<String, String> hm = new LinkedHashMap<>();
 		String key = StringUtils.substringBefore(str, " ");
-		String value = StringUtils.substringAfter(str, " ");
-		hm.put(key, value);
+		String value = StringUtils.substringAfter(str, " ");		
+		hm.put(key.toUpperCase(), value);
 		return hm;
 	}
 	
@@ -58,7 +58,7 @@ public class IVTMultiTagCommonFunctionalities extends IVTBase {
         String key = StringUtils.substringBefore(str, " ");
 		String value = StringUtils.substringAfter(str, " ");
 		String val = value.replaceAll("\\|", "");
-		tempLHM.put(key, val);
+		tempLHM.put(key.toUpperCase(), val);
 		return tempLHM;
     }
 	
@@ -68,7 +68,7 @@ public class IVTMultiTagCommonFunctionalities extends IVTBase {
        for(String s : list){
             String key = StringUtils.substringBefore(s," ");
             String val = StringUtils.substringAfter(s," ");
-            tempLHM.put(key,val);
+            tempLHM.put(key.toUpperCase(),val);
         }
       return tempLHM;
     }
@@ -86,8 +86,8 @@ public class IVTMultiTagCommonFunctionalities extends IVTBase {
 			map.put(itr++,line );
 		}
 		for(int i : map.keySet()) {
-			if(map.get(i).startsWith(tagName)) {
-				map1.put(i, map.get(i));
+			if(map.get(i).startsWith(tagName.toLowerCase()) || map.get(i).startsWith(tagName.toUpperCase())) {
+				map1.put(i, map.get(i).toUpperCase());
 			}
 		}
 		
