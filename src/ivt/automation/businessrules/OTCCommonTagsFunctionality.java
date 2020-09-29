@@ -84,13 +84,13 @@ public class OTCCommonTagsFunctionality extends IVTBase{
 		if(otcPrice!=0.0 && taxCode!=0) {
 			switch(taxCode) {			
 			case 2 :
-				finalOtcPrice = otcPrice * 0.2;
+				finalOtcPrice = otcPrice -(otcPrice * 0.2);
 				break;
 			case 3008 :
-				finalOtcPrice = otcPrice * 0.2;
+				finalOtcPrice = otcPrice -(otcPrice * 0.2);
 				break;
 			case 3006 :
-				finalOtcPrice = otcPrice * 0.05;
+				finalOtcPrice = otcPrice -(otcPrice * 0.05);
 				break;
 			default:
 				finalOtcPrice = otcPrice;
