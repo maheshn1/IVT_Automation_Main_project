@@ -32,6 +32,7 @@ public class EVTOTAL_ID extends IVTBase {
     static String custAccountNumber=null;
     BusinessRules br1 = new BusinessRules();
     MappingDoc md = new MappingDoc();
+    GenUtils gu =  new GenUtils();
     static boolean EVTOTAL_FLAG=false;
 
     // ncMapDocAL:- List from brMapDoc... i.e. mapping Tag for IBM Key
@@ -51,11 +52,13 @@ public class EVTOTAL_ID extends IVTBase {
         eventsList = xlsxfile.fetchTagNames(propertyFileRead("IBMBrTag"),propertyFileRead("NC_IBM_Maps"));
         
         System.out.println("*********************Checking for EVTOTAL******************");
+        System.out.println("\n\n"+IBMFile+"<-------------------------:"+ACCOUNTNUMBER+":--------------------------->"+NCFile);
 
         for(String brEventTag : eventsList) {
-            if (brEventTag.toUpperCase().contains("EVTOTAL_")) {
+            if ((brEventTag.toUpperCase().contains("EVTOTAL_"))) {
                 try {
-                    ibmMapAL = GenUtils.fetchArrayListContainingTag(IBMFile, brEventTag);
+                    ibmMapAL = gu.fetchArrayListContainingTag(IBMFile, brEventTag);
+          //          System.out.println("eventTag : "+brEventTag+"=="+ibmMapAL.size());
                     ibmEventMap = GenUtils.convertList2Map(ibmMapAL);
                 }catch(Exception e){
                     System.out.println("fetchArrayListContainingTag EVTOTAL_ID is Null..."+e);
@@ -81,24 +84,26 @@ public class EVTOTAL_ID extends IVTBase {
                         }
                     }catch(Exception e){
                         System.out.println("ncMapDoc in EVTOTAL_ID is null.."+e);
-
                     }
                     ncTagName=StringUtils.substringBefore((ncEventMap.toString()),"=").toUpperCase();
                     ncTagName=("NC_").concat(ncTagName.replaceAll(ncregex.toString(),"").trim().toUpperCase());
+                    try {
                     ncTagName=fetchEventNames(ncTagName);
                     ncEventTagTotal = fetchEventTagTotal(ncEventMap);
                     ibmMapTagVal = ibmMapEntries.getValue().toString().toUpperCase();
                     ibmMapTagVal = ibmMapTagVal.replaceAll("\\|", "").trim();
                     ibmEventTagTotal = ibmEventTagTotal + Integer.parseInt(ibmMapTagVal);
+                    }catch(Exception e){
+                                System.out.println("Tag Values are NULL in the file "+e);              
+                    }
                     try{
                         Tax = (int) (ibmEventTagTotal * .2);
                         IBMVALUE_After_Tax = ibmEventTagTotal + Tax;
                     }catch(Exception e){
                         System.out.println("Tax in EVTOTAL_ID cannot be Null... "+e);
-
                     }
                    // System.out.println("\n" + ibmEventTagTotal + "+ Tax@20% :- " + Tax + " ibm after adding Tax:- " + (ibmEventTagTotal + Tax));
-                    if ((IBMVALUE_After_Tax) != (ncEventTagTotal)) {
+                   if ((IBMVALUE_After_Tax) != (ncEventTagTotal)) {
                      //   System.out.println("CustAccountNumber:-" + custAccountNumber + " Tags NOT EQUAL--------->>>>" + ibmMapEntries.getKey() + ":-" + ibmEventTagTotal + "  :: " + ncEventMap + ":- " + ncEventTagTotal);
                         printEventMatchedReportInExcelSheet(ibmMapEntries.toString(), ibmTagName, String.valueOf(ibmEventTagTotal),String.valueOf(IBMVALUE_After_Tax),ncEventMap.toString(), ncTagName,String.valueOf((ncEventTagTotal + Tax)),"NA");
                         EVTOTAL_FLAG=true;
@@ -117,9 +122,14 @@ public class EVTOTAL_ID extends IVTBase {
         int eventTagTotal=0;String mapVal=null;
         Pattern regex = Pattern.compile("\\d+");
         for(Map.Entry me : ncEventMap.entrySet()){
+               try {
             mapVal=me.getValue().toString().toUpperCase().trim();
             mapVal=mapVal.replaceAll("\\|","").trim();
             eventTagTotal= eventTagTotal+Integer.parseInt(mapVal);
+               }catch(Exception e) {
+                               System.out.println("fetchEventTagTotal:- check mapVal for  "+ncEventMap +"::"+e);
+                               
+               }
         }
         //   System.out.println("tagTot===="+eventTagTotal);
         return eventTagTotal;
@@ -132,12 +142,18 @@ public class EVTOTAL_ID extends IVTBase {
         String line=null; String[] evTOTALTag;
         for (String brEventMaptag : eventsList) {
             while(((line = br.readLine()) != null)) {
+               try {
                 if(line.contains(brEventMaptag)){
                     String s = StringUtils.substringBefore(line," ").trim().toUpperCase();
                     if(brEventMaptag.equalsIgnoreCase(s)){
                         tempAL.add(line.toUpperCase().trim());
+                    } else   if(brEventMaptag.equalsIgnoreCase(s)){
+                              System.out.println("File do Not Have Data for ::"+brEventMaptag);
                     }
                 }
+            }catch(Exception e) {
+               System.out.println("fetchAllBREventsList : "+brEventMaptag+" do not exist in file"+e);                    
+            }
             }
         }
         br.close();

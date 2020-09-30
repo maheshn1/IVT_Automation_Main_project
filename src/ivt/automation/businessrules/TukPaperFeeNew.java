@@ -8,11 +8,6 @@ import ivt.automation.core.IVTBase;
 
 public class TukPaperFeeNew extends IVTBase{
 
-
-	public String o2ProdBotTot="O2PRODBOTOT";
-	public String tukPaperFee="Paper Bill Charge Type",tukMonthlyExtra_Total="SAPROD";	
-	public String tukPaperFeeFormula = null;
-
 	public void compareTukPaperFee(String fileIBM, String fileNC) throws Exception {
 
 		IVTMultiTagCommonFunctionalities ivtMultiTagCommonFunction = new IVTMultiTagCommonFunctionalities();
@@ -24,6 +19,10 @@ public class TukPaperFeeNew extends IVTBase{
 		List<String> tagsIBM = new ArrayList<>();
 		List<String> ibmlist = new ArrayList<>();
 		List<String> ncSaProdlist = new ArrayList<>();
+		String o2ProdBotTot="O2PRODBOTOT";
+		String tukPaperFee="Paper Bill Charge Type",tukMonthlyExtra_Total="SAPROD";	
+		String tukPaperFeeFormula = null;
+		String o2ProdBototMissingTagValue="",tukPaperFeeMissingValue ="", boltOnsMissingValue="", ncMissingValue="";
 		double ncValue = 0.0;
 		double ibmValue = 0.0;
 		double nctukMonthlyExtraCharge = 0.0;
@@ -32,6 +31,7 @@ public class TukPaperFeeNew extends IVTBase{
 		double diff = 0.0;
 		double otcPriceSum = 0.0;
 		int nctukMonthlyExtraTaxCode = 0;
+		
 
 		tukPaperFeeFormula = propertyFileRead(o2ProdBotTot);
 
@@ -49,11 +49,21 @@ public class TukPaperFeeNew extends IVTBase{
 			}			
 		}
 		catch(Exception e) {
-			System.out.println("IBM Tag Value is not Present");
+			System.out.println(o2ProdBotTot+" Tag Value is not Present");
 		}
-		ncTukPaperFee = otcCommonFunction.fetchOTCPriceTags(fileNC,"OTCTYPENAME",tukPaperFee);
 
-		otcPriceSum = otcCommonFunction.fetchOTCPriceTags(fileNC,"OTCNAME","Bolt On");
+		ncTukPaperFee = otcCommonFunction.fetchOTCPriceTags(fileNC,"OTCTYPENAME",tukPaperFee);
+		if(ncTukPaperFee==0.0) {			
+			tukPaperFeeMissingValue ="Null";
+			System.out.println("PaperFee OTCPrice Value is not Present");
+		}
+
+		otcPriceSum = otcCommonFunction.fetchOTCPriceTags(fileNC,"OTCNAME","Bolt On");						
+
+		if(otcPriceSum==0.0) {
+			boltOnsMissingValue = "Null";
+			System.out.println("Bolt On OTCPrice Value is not Present");
+		}
 
 		ncSaProdlist = ivtMultiTagCommonFunction.fetchMultiOccurenceTag(fileNC,tukMonthlyExtra_Total);		
 		if(!(ncSaProdlist.isEmpty())) {
@@ -65,6 +75,10 @@ public class TukPaperFeeNew extends IVTBase{
 				SaProdValue.clear();
 			}
 		}
+		else {
+			tukMonthlyExtra_Total = "NULL";	
+			System.out.println("SAPROD Value is not Present");
+		}
 
 		try {
 			if(Double.toString(ncTukPaperFee) != null && Double.toString(saProdFinalValue) != null && Double.toString(otcPriceSum) != null) { 
@@ -72,22 +86,40 @@ public class TukPaperFeeNew extends IVTBase{
 			}			
 		}
 		catch(Exception e) {
-			System.out.println("NC Tag Value is not Present");
+			ncValue = 0.0;
+			System.out.println(tukPaperFeeFormula+" Tag Value is not Present");
 		}
-		if(ibmValue != ncValue){
-			if(ibmValue > ncValue) {
-				diff = ibmValue - ncValue;				
+
+		if(o2ProdBotTot.equalsIgnoreCase("NULL") && tukPaperFeeMissingValue.equalsIgnoreCase("NULL") && boltOnsMissingValue.equalsIgnoreCase("NULL") && tukMonthlyExtra_Total.equalsIgnoreCase("NULL") ) {
+			System.out.println("Respective tags not present for this Customer Account No");
+		}		
+		else if(o2ProdBotTot.equalsIgnoreCase("NULL") || tukPaperFeeMissingValue.equalsIgnoreCase("NULL") || boltOnsMissingValue.equalsIgnoreCase("NULL") || tukMonthlyExtra_Total.equalsIgnoreCase("NULL")) {
+			if(o2ProdBotTot.equalsIgnoreCase("NULL")) {
+				o2ProdBototMissingTagValue = "O2ProdBoltOn Tag Missing";
+				o2ProdBotTot = "O2PRODBOTOT";				
+				printUnMatchedReportInExcelSheet(o2ProdBotTot, o2ProdBototMissingTagValue, tukPaperFeeFormula, Double.toString(ncValue), "NA");
 			}
-			else {
-				diff = ncValue - ibmValue;
+			if(tukPaperFeeMissingValue.equalsIgnoreCase("NULL") || boltOnsMissingValue.equalsIgnoreCase("NULL") || tukMonthlyExtra_Total.equalsIgnoreCase("NULL")) {
+				ncMissingValue = "PaperFee/BoltOns/SAProd Missing";
+				printUnMatchedReportInExcelSheet(o2ProdBotTot, Double.toString(ibmValue), tukPaperFeeFormula, ncMissingValue, "NA");
+			}			
+		}		
+		else {
+			if(ibmValue != ncValue){
+				if(ibmValue > ncValue) {
+					diff = ibmValue - ncValue;				
+				}
+				else {
+					diff = ncValue - ibmValue;
+				}
+				System.out.println("Account Number " + ACCOUNTNUMBER + "::Tag Mapping:" +o2ProdBotTot+" vs " + tukPaperFeeFormula + "--> IBM Value:: " + ibmValue
+						+ " NC Value:: " + ncValue);
+				printUnMatchedReportInExcelSheet(o2ProdBotTot, Double.toString(ibmValue), tukPaperFeeFormula, Double.toString(ncValue), Double.toString(diff));
 			}
-			System.out.println("Account Number " + ACCOUNTNUMBER + "::Tag Mapping:" +o2ProdBotTot+" vs " + tukPaperFeeFormula + "--> IBM Value:: " + ibmValue
-					+ " NC Value:: " + ncValue);
-			printUnMatchedReportInExcelSheet(o2ProdBotTot, Double.toString(ibmValue), tukPaperFeeFormula, Double.toString(ncValue), Double.toString(diff));
-		}
-		else
-		{
-			printMatchedReportInExcelSheet(o2ProdBotTot, Double.toString(ibmValue), tukPaperFeeFormula, Double.toString(ncValue), Double.toString(diff));
+			else
+			{
+				printMatchedReportInExcelSheet(o2ProdBotTot, Double.toString(ibmValue), tukPaperFeeFormula, Double.toString(ncValue), Double.toString(diff));
+			}
 		}
 	}	
 }

@@ -59,35 +59,35 @@ public class IVTSingleTagCompareFiles extends IVTBase {
 		double diff =0.0;
 
 		singleTagsList = xlsxfile.fetchTagNames(propertyFileRead("IBMNCTAG"),propertyFileRead("NC_IBM_Maps"));
-		System.out.println(singleTagsList);
 
-
-		for(int i=0;i<singleTagsList.size();i++) {
+		//for(int i=0;i<singleTagsList.size();i++) {
+		for (String tag : singleTagsList) {
 			tagNameAndValueIBM.clear();	
-			ibmlist = getIBMNCTagNames(fileIBM,singleTagsList.get(i));
+			ibmlist = getIBMNCTagNames(fileIBM,tag);
 			if(!ibmlist.isEmpty()) {
 				tagNameAndValueIBM = convertList2Map(ibmlist);
 			}
 			else
 			{
-				tagNameAndValueIBM.put("IBM Tag Missing","0.0");
-				//ibmTag = "Null";
+				tagNameAndValueIBM.put(tag.toUpperCase(),"IBM Tag Missing");
 			}
 			tagNameAndValueNC.clear();
-			nclist = getIBMNCTagNames(fileNC,singleTagsList.get(i));
+			nclist = getIBMNCTagNames(fileNC,tag);
 			if(!nclist.isEmpty()) {
 				tagNameAndValueNC = convertList2Map(nclist);
 			}
 			else
 			{
-				tagNameAndValueNC.put("NC Tag Missing","0.0");
-				//nctag = "NULL";
+				tagNameAndValueNC.put(tag.toUpperCase(),"NC Tag Missing");				
 			}
 			String IBMValue="";
 			String NCValue = "";
 
-			for (String tag : tagNameAndValueIBM.keySet()) {	
-
+			//for (String tag : tagNameAndValueIBM.keySet()) {	
+			if(tagNameAndValueIBM.get(tag).equalsIgnoreCase("IBM Tag Missing") || tagNameAndValueNC.get(tag).equalsIgnoreCase("NC Tag Missing")){
+				printUnMatchedReportInExcelSheet(tag, tagNameAndValueIBM.get(tag), tag, tagNameAndValueNC.get(tag), "NA");
+			}
+			else {
 				if(!(tag.equalsIgnoreCase("ACCOUNTNO") || tag.equalsIgnoreCase("BILLDATE") || tag.equalsIgnoreCase("PAYMENTDUEDATE") 
 						|| tag.equalsIgnoreCase("INVOICESTART") || tag.equalsIgnoreCase("INVOICEEND"))) {
 					IBMValue = tagNameAndValueIBM.get(tag);
@@ -103,9 +103,7 @@ public class IVTSingleTagCompareFiles extends IVTBase {
 						else {
 							diff = ncDoubleValue - ibmDoubleValue;
 						}
-						if(tagNameAndValueIBM.get(singleTagsList.get(i))=="0.0" || tagNameAndValueNC.get(singleTagsList.get(i))=="0.0"){
-							tag = "NULL";
-						}
+
 						System.out.println("Account Number " + ACCOUNTNUMBER + "::Tag:" + tag + " IBM Value:: " + IBMValue
 								+ " NC Value:: " + NCValue);
 						printUnMatchedReportInExcelSheet(tag, IBMValue, tag, NCValue, Double.toString(diff));
@@ -123,8 +121,7 @@ public class IVTSingleTagCompareFiles extends IVTBase {
 					IBMValue = tagNameAndValueIBM.get(tag);
 					NCValue = tagNameAndValueNC.get(tag);
 					if (!IBMValue.equalsIgnoreCase(NCValue)) {
-						ibmDoubleValue = Double.parseDouble(IBMValue);
-						ncDoubleValue = Double.parseDouble(NCValue);
+
 						System.out.println("Account Number " + ACCOUNTNUMBER + "::Tag:" + tag + " IBM Value:: " + IBMValue
 								+ " NC Value:: " + NCValue);
 						printUnMatchedReportInExcelSheet(tag, IBMValue, tag, NCValue, "NA");
@@ -136,6 +133,8 @@ public class IVTSingleTagCompareFiles extends IVTBase {
 					}
 				}
 			}
+			//}
+			//}
 		}
 		singleTagsList.clear();
 		//} 

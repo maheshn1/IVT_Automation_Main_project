@@ -41,6 +41,9 @@ public class IVTBase {
 	public static int IBMValue_row = 1;
 	public static int NCValue_row = 1;
 	public static int flag_row = 1;
+	public static int IBMValue_rowEV = 1;
+	public static int NCValue_rowEV = 1;
+	public static int flag_rowEV = 1;
 
 	public static String ACCOUNTNUMBER = null;
 	public static String CCAFILENAME = null;
@@ -114,53 +117,55 @@ public class IVTBase {
 		IVTExcelReport.setCellValues(sheetName, NCValue_row++, DIFFERENCE_NUMBER, difference);
 		IVTExcelReport.setCellValues(sheetName, flag_row++, FLAG_NUMBER, "YES");
 	}
+	
 	public static void printEventUnMatchedReportInExcelSheet(String ibmTag, String ibmTagName, String ibmValue, String IBMVALUE_After_Tax1, String ncTag, String ncTagNames, String ncValue, String difference) throws Exception {
-		int ACCOUNT_NUMBER = 0, IBMTAG_NUMBER = 1, IBM_TAGNAMES = 2, TAX_AtNC = 3, IBMVALUE_NUMBER = 4;
+		int IBMTAG_NUMBER = 1, IBM_TAGNAMES = 2, TAX_AtNC = 3, IBMVALUE_NUMBER = 4;
 		int IBMVALUE_After_Tax = 5, NCTAG_NUMBER = 6, NC_TAGNAMES = 7, NCVALUE_NUMBER = 8;
 		int DIFFERENCE_NUMBER = 9, FLAG_NUMBER = 10;
 		String EventsheetName = "IBM_NC_EVENT_Tags";
 
-		IVTExcelReport.setCellValues(EventsheetName, ++IBMValue_row, ACCOUNT_NUMBER, ACCOUNTNUMBER);
-		IVTExcelReport.setCellValues(EventsheetName, IBMValue_row, IBMTAG_NUMBER, ibmTag);
-		IVTExcelReport.setCellValues(EventsheetName, IBMValue_row, IBM_TAGNAMES, ibmTagName);
-		IVTExcelReport.setCellValues(EventsheetName, IBMValue_row, TAX_AtNC, TAX_Val_At_NC);
-		IVTExcelReport.setCellValues(EventsheetName, IBMValue_row, IBMVALUE_NUMBER, ibmValue);
-		IVTExcelReport.setCellValues(EventsheetName, IBMValue_row, IBMVALUE_After_Tax, IBMVALUE_After_Tax1);
-		IVTExcelReport.setCellValues(EventsheetName, ++NCValue_row, NCTAG_NUMBER, ncTag);
-		IVTExcelReport.setCellValues(EventsheetName, NCValue_row, NC_TAGNAMES, ncTagNames);
-		IVTExcelReport.setCellValues(EventsheetName, NCValue_row, NCVALUE_NUMBER, ncValue);
-		IVTExcelReport.setCellValues(EventsheetName, NCValue_row, DIFFERENCE_NUMBER, difference);
-		IVTExcelReport.setCellValues(EventsheetName, ++flag_row, FLAG_NUMBER, "NO");
+		IVTExcelReport.setCellValues(EventsheetName, IBMValue_rowEV, ACCOUNT_NUMBER, ACCOUNTNUMBER);
+		IVTExcelReport.setCellValues(EventsheetName, IBMValue_rowEV, IBMTAG_NUMBER, ibmTag);
+		IVTExcelReport.setCellValues(EventsheetName, IBMValue_rowEV, IBM_TAGNAMES, ibmTagName);
+		IVTExcelReport.setCellValues(EventsheetName, IBMValue_rowEV, TAX_AtNC, TAX_Val_At_NC);
+		IVTExcelReport.setCellValues(EventsheetName, IBMValue_rowEV, IBMVALUE_NUMBER, ibmValue);
+		IVTExcelReport.setCellValues(EventsheetName, IBMValue_rowEV++, IBMVALUE_After_Tax, IBMVALUE_After_Tax1);
+		IVTExcelReport.setCellValues(EventsheetName, NCValue_rowEV, NCTAG_NUMBER, ncTag);
+		IVTExcelReport.setCellValues(EventsheetName, NCValue_rowEV, NC_TAGNAMES, ncTagNames);
+		IVTExcelReport.setCellValues(EventsheetName, NCValue_rowEV, NCVALUE_NUMBER, ncValue);
+		IVTExcelReport.setCellValues(EventsheetName, NCValue_rowEV++, DIFFERENCE_NUMBER, difference);
+		IVTExcelReport.setCellValues(EventsheetName, flag_rowEV++, FLAG_NUMBER, "NO");
 	}
 
 	public static void printEventMatchedReportInExcelSheet(String ibmTag, String ibmTagName, String ibmValue, String IBMVALUE_After_Tax1, String ncTag, String ncTagNames, String ncValue, String difference) throws Exception {
-		int ACCOUNT_NUMBER = 0, IBMTAG_NUMBER = 1, IBM_TAGNAMES = 2, TAX_AtNC = 3, IBMVALUE_NUMBER = 4;
+		int IBMTAG_NUMBER = 1, IBM_TAGNAMES = 2, TAX_AtNC = 3, IBMVALUE_NUMBER = 4;
 		int IBMVALUE_After_Tax = 5, NCTAG_NUMBER = 6, NC_TAGNAMES = 7, NCVALUE_NUMBER = 8;
 		int DIFFERENCE_NUMBER = 9, FLAG_NUMBER = 10;
 		String EventsheetName = "IBM_NC_EVENT_Tags";
 
-		IVTExcelReport.setCellValues(EventsheetName, ++IBMValue_row, ACCOUNT_NUMBER, ACCOUNTNUMBER);
-		IVTExcelReport.setCellValues(EventsheetName, IBMValue_row, IBMTAG_NUMBER, ibmTag);
-		IVTExcelReport.setCellValues(EventsheetName, IBMValue_row, IBM_TAGNAMES, ibmTagName);
-		IVTExcelReport.setCellValues(EventsheetName, IBMValue_row, TAX_AtNC, TAX_Val_At_NC);
-		IVTExcelReport.setCellValues(EventsheetName, IBMValue_row, IBMVALUE_NUMBER, ibmValue);
-		IVTExcelReport.setCellValues(EventsheetName, IBMValue_row, IBMVALUE_After_Tax, IBMVALUE_After_Tax1);
-		IVTExcelReport.setCellValues(EventsheetName, ++NCValue_row, NCTAG_NUMBER, ncTag);
-		IVTExcelReport.setCellValues(EventsheetName, NCValue_row, NC_TAGNAMES, ncTagNames);
-		IVTExcelReport.setCellValues(EventsheetName, NCValue_row, NCVALUE_NUMBER, ncValue);
-		IVTExcelReport.setCellValues(EventsheetName, NCValue_row, DIFFERENCE_NUMBER, difference);
-		IVTExcelReport.setCellValues(EventsheetName, ++flag_row, FLAG_NUMBER, "Yes");
+		IVTExcelReport.setCellValues(EventsheetName, IBMValue_rowEV, ACCOUNT_NUMBER, ACCOUNTNUMBER);
+		IVTExcelReport.setCellValues(EventsheetName, IBMValue_rowEV, IBMTAG_NUMBER, ibmTag);
+		IVTExcelReport.setCellValues(EventsheetName, IBMValue_rowEV, IBM_TAGNAMES, ibmTagName);
+		IVTExcelReport.setCellValues(EventsheetName, IBMValue_rowEV, TAX_AtNC, TAX_Val_At_NC);
+		IVTExcelReport.setCellValues(EventsheetName, IBMValue_rowEV, IBMVALUE_NUMBER, ibmValue);
+		IVTExcelReport.setCellValues(EventsheetName, IBMValue_rowEV++, IBMVALUE_After_Tax, IBMVALUE_After_Tax1);
+		IVTExcelReport.setCellValues(EventsheetName, NCValue_rowEV, NCTAG_NUMBER, ncTag);
+		IVTExcelReport.setCellValues(EventsheetName, NCValue_rowEV, NC_TAGNAMES, ncTagNames);
+		IVTExcelReport.setCellValues(EventsheetName, NCValue_rowEV, NCVALUE_NUMBER, ncValue);
+		IVTExcelReport.setCellValues(EventsheetName, NCValue_rowEV++, DIFFERENCE_NUMBER, difference);
+		IVTExcelReport.setCellValues(EventsheetName, flag_rowEV++, FLAG_NUMBER, "Yes");
 	}
 
 	public static void printFilesReport(int File_Num, String FileNames, String File_Origin, String File_Modify_Date, String File_Missing_From) throws Exception {
 		int FILE_NO = 0, IVT_FileName = 1, IVT_File_Origin = 2, File_Modified_Date = 3, File_Missing_From_Folder = 4;
 		String EventsheetName = "IBM_NC_ERROR_FILES";
+		int IBMValue_rowFiles=1;
 
-		IVTExcelReport.setCellValues(EventsheetName, ++IBMValue_row, FILE_NO, String.valueOf(File_Num));
-		IVTExcelReport.setCellValues(EventsheetName, IBMValue_row, IVT_FileName, FileNames);
-		IVTExcelReport.setCellValues(EventsheetName, IBMValue_row, IVT_File_Origin, File_Origin);
-		IVTExcelReport.setCellValues(EventsheetName, IBMValue_row, File_Modified_Date, File_Modify_Date);
-		IVTExcelReport.setCellValues(EventsheetName, IBMValue_row, File_Missing_From_Folder, File_Missing_From);
+		IVTExcelReport.setCellValues(EventsheetName, IBMValue_rowFiles, FILE_NO, String.valueOf(File_Num));
+		IVTExcelReport.setCellValues(EventsheetName, IBMValue_rowFiles, IVT_FileName, FileNames);
+		IVTExcelReport.setCellValues(EventsheetName, IBMValue_rowFiles, IVT_File_Origin, File_Origin);
+		IVTExcelReport.setCellValues(EventsheetName, IBMValue_rowFiles, File_Modified_Date, File_Modify_Date);
+		IVTExcelReport.setCellValues(EventsheetName, IBMValue_rowFiles++, File_Missing_From_Folder, File_Missing_From);
 	}
 
 	public void ERRORFILEMOVE() throws Exception {

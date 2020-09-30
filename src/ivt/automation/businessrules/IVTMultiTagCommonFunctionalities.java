@@ -106,7 +106,12 @@ public class IVTMultiTagCommonFunctionalities extends IVTBase {
 		String arr[] = splitStringValue(st, delimiter);
 		for(int i = 0; i<arr.length;i++) {
 			if(i==position) {
+				if(arr[i].isEmpty() || arr[i].equalsIgnoreCase(" ")) {
+					d=0.0;
+				}
+				else {
 				d = Double.parseDouble(arr[i]);
+				}
 			}
 		}
 		return d;

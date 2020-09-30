@@ -38,16 +38,18 @@ public class IVTMainTest extends IVTBase{
 			NC = a[1];
 			String b[] = IBM.split("\\\\");
 			int len = b.length;
-			ACCOUNTNUMBER = StringUtils.substringAfter(b[len-1], "_");
+			String ACCOUNTNUMBER1 = StringUtils.substringAfter(b[len-1], "_");
+			ACCOUNTNUMBER = StringUtils.substringBefore(ACCOUNTNUMBER1, ".");
 			System.out.println(ACCOUNTNUMBER);
 			
 			ivtSingleFile.compareIBMAndNCSingleTags(IBM,NC);
-			/*adj.CompareADJTags(IBM,NC);
+			//adj.CompareADJTags(IBM,NC);
+			airTime.compareAirTimePlanTotal(IBM,NC);
 			tukPaperFee.compareTukPaperFee(IBM, NC);
 			tukCurrentSpendCap.compareSpendCap(IBM, NC);
-			airTime.compareAirTimePlanTotal(IBM,NC);*/
-	        //tp.fetchLPFDetailsFromFiles(IBM,NC,ACCOUNTNUMBER);
-	        //evTotal.compareBREvents(IBM,NC,ACCOUNTNUMBER);
+			tukDiscountLine.compareDiscountLineTotal(IBM, NC);
+	        tp.fetchLPFDetailsFromFiles(IBM,NC,ACCOUNTNUMBER);
+	        evTotal.compareBREvents(IBM,NC,ACCOUNTNUMBER);
 		}
 		
 		for (String str : fetchCCAAndNCFiles()) {
@@ -59,17 +61,17 @@ public class IVTMainTest extends IVTBase{
 			String b[] = NC.split("\\\\");
 			int len = b.length;
 			ACCOUNTNUMBER = StringUtils.substringAfter(b[len-1], "_");
-			System.out.println(ACCOUNTNUMBER);
+			//System.out.println(ACCOUNTNUMBER);
 			
 			if(a.length==2) {
 				CCA = a[1];
-				//tukCCA.compareTukCCATotalSingleFile(CCA,NC);	
+				tukCCA.compareTukCCATotalSingleFile(CCA,NC);	
 			}
 			else {
 				for(int i=1;i<a.length;i++) {
 					ccalist.add(a[i]);
 				}
-				//tukCCA.compareTukCCATotalMultiFile(ccalist, NC);
+				tukCCA.compareTukCCATotalMultiFile(ccalist, NC);
 			}
 		}
 	}

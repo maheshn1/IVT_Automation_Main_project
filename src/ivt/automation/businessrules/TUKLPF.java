@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,11 +15,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import ivt.automation.ProjSpecs.MappingDoc;
 import ivt.automation.core.BusinessRules;
 import ivt.automation.core.IVTBase;
+import ivt.automation.report.IVTExcelReport;
 import ivt.automation.utils.GenUtils;
 import ivt.automation.utils.XlsxFile;
 
@@ -50,7 +53,8 @@ public class TUKLPF extends IVTBase {
         XlsxFile xlsxfile = new XlsxFile();
         eventsList = xlsxfile.fetchTagNames(propertyFileRead("IBMBrTag"), propertyFileRead("NC_IBM_Maps"));
         
-        System.out.println("************************Checking for TUKLATEFEE TAGS*********************************");
+      //  System.out.println("************************Checking for TUKLATEFEE TAGS*********************************");
+                System.out.println("\n\n"+IBMFile+"<-------------------------:"+ACCOUNTNUMBER+":--------------------------->"+NCFile);
         
         for (String brEventTag : eventsList) {
             if (brEventTag.toUpperCase().trim().contains("TUKLATEFEE")) {
@@ -118,12 +122,16 @@ public class TUKLPF extends IVTBase {
 
 //               -------------------------MAPS notEQUAL Date Equal-------------------------
                 for (Map.Entry me : ibmLHM.entrySet()) {
+                              try {
                     ibmMapKey = me.getKey().toString().toUpperCase().trim();
                     ibmMapVal = me.getValue().toString().toUpperCase().trim();
                     ncMapVal = ncLHM.get(ibmMapKey).toString().toUpperCase().trim();
                     ibmDateVal = ibmLHM.get("OTCDATE").toString().trim();
                     ncDateVal = ncLHM.get("OTCDATE").toString().trim();
 //                    System.out.println("KEYS..." + ibmMapKey + "::IBMKEY<---->VAL::" + ibmMapVal + "::::NcVal:--" + ncMapVal);
+                              }catch(Exception e){
+                                              System.out.println("check IBM & NC Key Val is Null"+e);
+                              }
                     if (((ibmDateVal.equals(ncDateVal)))) {
 //                        System.out.println(" \n\n----------MAPS notEQUAL Date EQual-------");
 //                        System.out.println(ctr1++ + "====>" + ibmLHM + "::::IBM<----comparing---->NC::::" + ncLHM);
@@ -324,9 +332,13 @@ public class TUKLPF extends IVTBase {
         while (((line = br.readLine()) != null)) {
             if (line.toUpperCase().trim().contains(startTUKLateFeeBlock)) {
                 sTUKBLK = true;
-            } else if (line.toUpperCase().trim().contains(startTUKLateFeeBlock)) {
-                sTUKBLK = false;
-            }
+            } else if ((line.toUpperCase().trim().contains(endTUKLATEFEEBlock))) {
+                sTUKBLK = false;  
+                }            
+//            else {
+//                                           System.out.println("File do not have"+startTUKLateFeeBlock+"::"+endTUKLATEFEEBlock);
+//            }
+                           
             if (sTUKBLK == true) {
                 String otcChek = StringUtils.substringBefore(line, " ");
                 if (otcChek.equalsIgnoreCase(startOTCBlock)) {
@@ -336,6 +348,9 @@ public class TUKLPF extends IVTBase {
                     sOTCBLK = false;
                     tempAL.add(line);
                 }
+//                else {
+//                          System.out.println("File do not have"+startOTCBlock+"::"+endOTCBlock);
+//                }
                 if (sOTCBLK == true) {
                     tukTagName = StringUtils.substringBefore(line, " ").toUpperCase().trim();
                     if (brMapDocTUKAL.contains(tukTagName)) tempAL.add(line);
@@ -426,4 +441,4 @@ public class TUKLPF extends IVTBase {
         }
         return taxVal;
     }
-} // end of Class
+} 
