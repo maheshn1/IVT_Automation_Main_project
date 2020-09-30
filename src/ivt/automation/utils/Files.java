@@ -43,7 +43,7 @@ public class Files extends IVTBase{
 		return ivtFilesPath;
 	}
 
-	public List<String> searchIBMFileForNCFile() throws Exception
+	public List<String> searchIBMFileForNCFile(String sheetName) throws Exception
 	{
 		List<String> NCFilesPath = new  ArrayList<String>();
 		List<String> IBMFilesPath = new  ArrayList<String>();
@@ -52,7 +52,7 @@ public class Files extends IVTBase{
 		NCFilesPath = fetchFileFromivtDataFilesFolder("NC");                             
 		IBMFilesPath = fetchFileFromivtDataFilesFolder("IBM");
 
-		String ivtFilePath=propertyFileRead("IVT_Folder");
+		String ivtFilePath=propertyFileRead(sheetName);
 		String ibmAcNo="",ncAcNo="";
 
 		for(String ncFile : NCFilesPath) {

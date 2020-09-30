@@ -24,6 +24,8 @@ public class Adj extends IVTBase{
 		double ncAdjValue = 0.0;
 		double diff = 0.0;
 
+		System.out.println("*********************Checking for ADJ***********************");
+		
 		ibmtags.add(ibmNCAdj);
 		nctags.add(ibmNCAdj);
 

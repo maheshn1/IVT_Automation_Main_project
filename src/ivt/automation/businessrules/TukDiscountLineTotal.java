@@ -51,7 +51,7 @@ public class TukDiscountLineTotal extends IVTBase{
 			}			
 		}
 		catch(Exception e) {
-			System.out.println("NC Tag Value is not Present for the Tag:"+tukDiscountLineTotal);
+			System.out.println("NC Tag Value is not Present for the Tag: "+tukDiscountLineTotal);
 		} 
 
 		discTagsIBM.add(accDiscPeriodDiscount);
@@ -63,8 +63,15 @@ public class TukDiscountLineTotal extends IVTBase{
 		{
 			accDiscPeriodDiscount = null;
 		}
-
-		ibmDiscValue = Double.parseDouble(discTagsAndValueIBM.get(accDiscPeriodDiscount));
+		try {
+			if(discTagsAndValueIBM.get(accDiscPeriodDiscount) != null && !(discTagsAndValueIBM.get(accDiscPeriodDiscount).isEmpty())) { 
+				ibmDiscValue = Double.parseDouble(discTagsAndValueIBM.get(accDiscPeriodDiscount));
+			}			
+		}
+		catch(Exception e) {
+			System.out.println("IBM Tag Value is not Present for the Tag: "+accDiscPeriodDiscount);
+		}
+		
 		accDiscTaxCodeList = ivtMultiTagCommonFunction.fetchMultiOccurenceTag(fileIBM,accDiscTaxCode);
 		if(!(accDiscTaxCodeList.isEmpty())) {
 			for (String s1 : accDiscTaxCodeList) {
