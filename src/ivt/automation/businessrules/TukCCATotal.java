@@ -53,7 +53,7 @@ public class TukCCATotal extends IVTBase{
 		ccaibmMapvalue = ivtSingleTagFunction.convertList2Map(ccaibmlist);
 		}else
 		{
-			invTotalRounded = null;
+			invTotalRounded = "NULL";
 		}
 		try {
 			if(ccaibmMapvalue.get(invTotalRounded) != null  && !(ccaibmMapvalue.get(invTotalRounded)).isEmpty()) {
@@ -66,7 +66,11 @@ public class TukCCATotal extends IVTBase{
 		nclist = ivtMultiTagCommonFunction.getTagName(ncFile,nctags);
 		if(!nclist.isEmpty()) {
 			ncMapValue = ivtSingleTagFunction.convertList2Map(nclist);
-		}		
+		}	
+		else
+		{
+			tuktCCATotal = "NULL";
+		}
 		try {
 			if(ncMapValue.get(tuktCCATotal) != null && ncMapValue.get(tuktCCATotal).isEmpty()) {
 		ncCCATotalValue = Double.parseDouble(ncMapValue.get(tuktCCATotal));
@@ -135,6 +139,10 @@ public class TukCCATotal extends IVTBase{
 			if(!ccaibmlist.isEmpty()) {
 			ccaibmMapvalue = ivtSingleTagFunction.convertList2Map(ccaibmlist);
 			}
+			else
+			{
+				invTotalRounded = "NULL";
+			}
 			try {
 				if(ccaibmMapvalue.get(invTotalRounded) != null && !(ccaibmMapvalue.get(invTotalRounded).isEmpty())) {
 			IbmCCATotalValue = Double.parseDouble(ccaibmMapvalue.get(invTotalRounded));
@@ -149,7 +157,11 @@ public class TukCCATotal extends IVTBase{
 		nclist = ivtMultiTagCommonFunction.getTagName(ncFile,nctags);
 		if(!nclist.isEmpty()) {
 			ncMapValue = ivtSingleTagFunction.convertList2Map(nclist);
-		}		
+		}	
+		else
+		{
+			tuktCCATotal = "NULL";
+		}
 		try {
 			if(ncMapValue.get(tuktCCATotal) != null && !(ncMapValue.get(tuktCCATotal).isEmpty())) {
 		ncCCATotalValue = Double.parseDouble(ncMapValue.get(tuktCCATotal));

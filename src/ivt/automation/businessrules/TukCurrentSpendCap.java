@@ -37,7 +37,7 @@ public class TukCurrentSpendCap extends IVTBase{
 		}
 		else
 		{
-			o2SpendCapEventsTot = null;
+			o2SpendCapEventsTot = "NULL";
 		}
 		ncTags = ivtMultiTagCommonFunction.fetchMultiOccurenceTag(fileNC, tukCurrentSpendCap);
 		if(!ncTags.isEmpty()) {
@@ -50,7 +50,7 @@ public class TukCurrentSpendCap extends IVTBase{
 		}
 		else
 		{
-			tukCurrentSpendCap = null;
+			tukCurrentSpendCap = "NULL";
 		}
 		if(ibmSpendCapValue1 != ncSpendCapValue1) {
 			if(ibmSpendCapValue1 > ncSpendCapValue1) {

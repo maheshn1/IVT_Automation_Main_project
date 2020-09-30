@@ -35,7 +35,7 @@ public class TukAirTimePlanTotal extends IVTBase {
 			ibmMapvalue = ivtSingleTagFunction.convertList2Map(ibmlist);
 		}	
 		else {
-			o2ProdLRTot = null;
+			o2ProdLRTot = "NULL";
 		}
 		try {
 			if(ibmMapvalue.get(o2ProdLRTot) != null && !(ibmMapvalue.get(o2ProdLRTot).isEmpty())) { 

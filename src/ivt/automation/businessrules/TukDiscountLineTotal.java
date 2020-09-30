@@ -43,7 +43,7 @@ public class TukDiscountLineTotal extends IVTBase{
 		}
 		else
 		{
-			tukDiscountLineTotal = null;
+			tukDiscountLineTotal = "NULL";
 		}
 		try {
 			if(discTagsAndValueNC.get(tukDiscountLineTotal) != null && !(discTagsAndValueNC.get(tukDiscountLineTotal).isEmpty())) { 
@@ -61,7 +61,7 @@ public class TukDiscountLineTotal extends IVTBase{
 		}
 		else
 		{
-			accDiscPeriodDiscount = null;
+			accDiscPeriodDiscount = "NULL";
 		}
 		try {
 			if(discTagsAndValueIBM.get(accDiscPeriodDiscount) != null && !(discTagsAndValueIBM.get(accDiscPeriodDiscount).isEmpty())) { 

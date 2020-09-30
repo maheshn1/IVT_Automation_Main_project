@@ -41,7 +41,7 @@ public class TukPaperFeeNew extends IVTBase{
 			tagNameAndValueIBM = ivtSingleTagFunction.convertList2Map(ibmlist);
 		}
 		else {
-			o2ProdBotTot = null;
+			o2ProdBotTot = "NULL";
 		}
 		try {
 			if(tagNameAndValueIBM.get(o2ProdBotTot) != null && !(tagNameAndValueIBM.get(o2ProdBotTot).isEmpty())) { 
